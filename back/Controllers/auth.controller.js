@@ -43,10 +43,10 @@ async function login(req, res) {
             return res.status(403).json({ error: "Identifiants incorrect" });
         }
 
-        const token = jwt.sign({user},
+        const token = jwt.sign({us_id : user.us_id, us_username : user.us_username, us_email : user.us_email, us_role : user.us_role},
             process.env.JWT_SECRET,{expiresIn : "1h"});
 
-        res.json({message : "Vous êtes bien connecté !", token});
+        res.status(201).json({message : "Vous êtes bien connecté !", token});
     } catch (error) {
         res.status(500).json({ error: "Une erreur est survenue lors de la connexion !" })
     }
