@@ -14,8 +14,8 @@ function checkToken(req, res, next) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
         if (err) {
             return res.status(403).json({ error: "Token incorrect" });
-        }2
-        req.user = decode.user;
+        }
+        req.user = decode.user || decode;
         next();
     })
 }

@@ -44,6 +44,7 @@ CREATE TABLE reservations (
     re_seats INT NOT NULL DEFAULT 1,
     re_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
+    UNIQUE (re_user, re_screening),
     FOREIGN KEY (re_user) REFERENCES users(us_id),
     FOREIGN KEY (re_screening) REFERENCES screenings(sc_id)
 );
@@ -51,8 +52,8 @@ CREATE TABLE reservations (
 
 CREATE USER 'cinema_user'@'localhost'
 IDENTIFIED BY 'CinemaPassword123!';
-GRANT SELECT, INSERT, UPDATE
-ON cinema_db.*
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON cinehub.*
 TO 'cinema_user'@'localhost';
 FLUSH PRIVILEGES;
 

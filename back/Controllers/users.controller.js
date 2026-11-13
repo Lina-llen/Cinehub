@@ -64,8 +64,9 @@ async function deleteUser(req, res) {
             return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
         }
         const deleted = await userModel.deleteUser(id);
-        res.json({ message: "Votre suppression à bien été faites", user });
+        res.json({ message: "Votre suppression à bien été faite", user });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Une erreur est survenue lors de la suppression de l'utilisateur" })
     }
 }
@@ -73,7 +74,10 @@ async function deleteUser(req, res) {
 //PROFILE//
 async function getMe(req, res) {
     try {
-        const userConnected = req.user;
+        const userConnected = await userModel.getMe(req.user.us_id);
+        if (!userConnected) {
+            return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
+        }
         res.json(userConnected);
     } catch (error) {
         res.status(500).json({ error: "Une erreur est survenue lors de la récupération du profile" })
