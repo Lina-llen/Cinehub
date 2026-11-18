@@ -38,6 +38,9 @@ async function update(req, res) {
         if (Number(id) !== Number(req.user.us_id) && req.user.us_role !== "admin") {
             return res.status(403).json({ error: "Vous ne pouvez modifier que votre propre compte" });
         }
+        if (body.password && Number(id) !== Number(req.user.us_id)) {
+            return res.status(403).json({ error: "Vous ne pouvez pas modifier le mot de passe d'un autre utilisateur" });
+        }
 
         if (body.email) {
             user.us_email = body.email;

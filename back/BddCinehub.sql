@@ -33,7 +33,8 @@ CREATE TABLE screenings (
     sc_datetime DATETIME NOT NULL,
     sc_price DECIMAL(6,2) NOT NULL,
 
-    FOREIGN KEY (sc_film) REFERENCES films(fi_id),
+    CONSTRAINT fk_screenings_film
+        FOREIGN KEY (sc_film) REFERENCES films(fi_id) ON DELETE CASCADE,
     FOREIGN KEY (sc_room) REFERENCES rooms(ro_id)
 );
 
@@ -46,7 +47,8 @@ CREATE TABLE reservations (
 
     UNIQUE (re_user, re_screening),
     FOREIGN KEY (re_user) REFERENCES users(us_id) ON DELETE CASCADE,
-    FOREIGN KEY (re_screening) REFERENCES screenings(sc_id)
+    CONSTRAINT fk_reservations_screening
+        FOREIGN KEY (re_screening) REFERENCES screenings(sc_id) ON DELETE CASCADE
 );
 
 

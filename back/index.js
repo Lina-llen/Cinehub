@@ -1,5 +1,6 @@
 //IMPORTS//
 import express from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import authRoutes from './Routes/auth.route.js'
 import checkToken from './Middlewares/auth.middleware.js';
@@ -13,6 +14,7 @@ import reservationsRoutes from './Routes/reservations.route.js';
 dotenv.config();
 
 const app = express();
+app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
 app.use(express.json());
 
 //ROUTES//
