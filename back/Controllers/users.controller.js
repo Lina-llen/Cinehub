@@ -18,7 +18,7 @@ async function getById(req, res) {
         const id = req.params.id;
         const user = await userModel.getById(id);
         if (!user) {
-            return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
+            return res.status(404).json({ error: "L'utilisateur n'existe pas" });
         }
         res.json(user);
     } catch (error) {
@@ -33,7 +33,10 @@ async function update(req, res) {
         const body = req.body;
         const user = await userModel.getById(id);
         if (!user) {
-            return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
+            return res.status(404).json({ error: "L'utilisateur n'existe pas" });
+        }
+        if (Number(id) !== Number(req.user.us_id) && req.user.us_role !== "admin") {
+            return res.status(403).json({ error: "Vous ne pouvez modifier que votre propre compte" });
         }
 
         if (body.email) {
@@ -61,7 +64,10 @@ async function deleteUser(req, res) {
         const id = req.params.id;
         const user = await userModel.getById(id);
         if (!user) {
-            return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
+            return res.status(404).json({ error: "L'utilisateur n'existe pas" });
+        }
+        if (Number(id) !== Number(req.user.us_id) && req.user.us_role !== "admin") {
+            return res.status(403).json({ error: "Vous ne pouvez supprimer que votre propre compte" });
         }
         const deleted = await userModel.deleteUser(id);
         res.json({ message: "Votre suppression à bien été faite", user });
@@ -76,7 +82,7 @@ async function getMe(req, res) {
     try {
         const userConnected = await userModel.getMe(req.user.us_id);
         if (!userConnected) {
-            return res.status(404).json({ erreur: "L'utilisateur n'existe pas" });
+            return res.status(404).json({ error: "L'utilisateur n'existe pas" });
         }
         res.json(userConnected);
     } catch (error) {

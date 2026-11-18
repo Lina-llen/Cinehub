@@ -1,5 +1,6 @@
 //IMPORTS//
 import filmModel from '../Models/films.model.js';
+import screeningModel from '../Models/screenings.model.js';
 
 //GET ALL// 
 async function getAll(req, res) {
@@ -27,9 +28,10 @@ async function getById(req, res) {
             const id = req.params.id;
             const film = await filmModel.getById(id);
             if (!film) {
-                return res.status(404).json({ erreur: "Le film n'existe pas" });
+                return res.status(404).json({ error: "Le film n'existe pas" });
             }
-            res.json(film);
+            const screenings = await screeningModel.getUpcomingByFilm(id);
+            res.json({ ...film, screenings });
         } catch (error) {
             res.status(500).json({ error: "Une erreur est survenue lors de la récupération du film" })
         }
@@ -53,7 +55,7 @@ async function update(req, res) {
         const body = req.body || {};
         const film = await filmModel.getById(id);
         if (!film) {
-            return res.status(404).json({ erreur: "Le film n'existe pas" });
+            return res.status(404).json({ error: "Le film n'existe pas" });
         }
 
         const updatedFilm = {
@@ -76,6 +78,10 @@ async function update(req, res) {
 async function deleteFilm(req, res) {
     try {
         const id = req.params.id;
+        const film = await filmModel.getById(id);
+        if (!film) {
+            return res.status(404).json({ error: "Le film n'existe pas" });
+        }
         const deletedFilm = await filmModel.deleteFilm(id);
         res.json(deletedFilm);
     } catch (error) {

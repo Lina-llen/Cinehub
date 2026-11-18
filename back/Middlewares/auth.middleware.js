@@ -5,10 +5,10 @@ dotenv.config();
 
 function checkToken(req, res, next) {
     const headers = req.headers["authorization"];
-    const token = headers && headers.split(" ")[1];
+    const token = headers && headers.startsWith("Bearer ") ? headers.slice(7) : null;
 
     if (!token) {
-        return res.status(401).json({ error: "Unhautorized" });
+        return res.status(401).json({ error: "Unauthorized" });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {

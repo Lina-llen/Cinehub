@@ -87,7 +87,7 @@ async function deleteReservation(req, res) {
         if (!reservation) {
             return res.status(404).json({ error: "La réservation n'existe pas" });
         }
-        if (Number(reservation.re_user) !== Number(req.user.us_id)) {
+        if (Number(reservation.re_user) !== Number(req.user.us_id) && req.user.us_role !== "admin") {
             return res.status(403).json({ error: "Vous ne pouvez pas annuler cette réservation" });
         }
 

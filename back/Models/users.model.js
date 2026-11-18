@@ -34,8 +34,14 @@ async function deleteUser(id) {
 
 //UPDATE USER//
 async function update(id, user) {
-    const updated = await Db.query("UPDATE users set us_username = ?, us_email=? WHERE us_id = ?",
-        [user.us_username, user.us_email, id]);
+    let updated;
+    if (user.us_password) {
+        updated = await Db.query("UPDATE users set us_username = ?, us_email = ?, us_password = ? WHERE us_id = ?",
+            [user.us_username, user.us_email, user.us_password, id]);
+    } else {
+        updated = await Db.query("UPDATE users set us_username = ?, us_email = ? WHERE us_id = ?",
+            [user.us_username, user.us_email, id]);
+    }
     return updated;
 }
 

@@ -1,14 +1,15 @@
 //IMPORTS//
 import express from "express";
 import reservationController from '../Controllers/reservations.controller.js';
+import checkAdmin from '../Middlewares/admin.middleware.js';
 
 const router = express.Router();
 
-router.get("/", reservationController.getAll);
+router.get("/", checkAdmin, reservationController.getAll);
 
 router.get("/me", reservationController.getMine);
 
-router.get("/screening/:screeningID", reservationController.getByScreening);
+router.get("/screening/:screeningID", checkAdmin, reservationController.getByScreening);
 
 router.post("/", reservationController.insert);
 

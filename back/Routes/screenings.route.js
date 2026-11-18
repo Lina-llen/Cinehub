@@ -1,6 +1,7 @@
 //IMPORTS//
 import express from "express";
 import screeningController from '../Controllers/screenings.controller.js';
+import checkAdmin from '../Middlewares/admin.middleware.js';
 
 const router = express.Router();
 
@@ -10,10 +11,10 @@ router.get("/film/:filmID", screeningController.getByFilm);
 
 router.get("/:id", screeningController.getById);
 
-router.post("/", screeningController.insert);
+router.post("/", checkAdmin, screeningController.insert);
 
-router.patch("/:id", screeningController.update);
+router.patch("/:id", checkAdmin, screeningController.update);
 
-router.delete("/:id", screeningController.deleteScreening);
+router.delete("/:id", checkAdmin, screeningController.deleteScreening);
 
 export default router;

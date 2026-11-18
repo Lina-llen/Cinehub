@@ -1,10 +1,11 @@
 //IMPORTS//
 import express from "express";
 import userController from '../Controllers/users.controller.js'
+import checkAdmin from '../Middlewares/admin.middleware.js';
 
 const router = express.Router();
 
-router.get("/", userController.getAll);
+router.get("/", checkAdmin, userController.getAll);
 
 router.get("/me", userController.getMe);
 

@@ -1,0 +1,1215 @@
+{
+  "info": {
+    "_postman_id": "72804bc8-70da-41d4-9454-0963ae50b1c2",
+    "name": "Cinehub",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58341667",
+    "_collection_link": "https://go.postman.co/collection/58341667-72804bc8-70da-41d4-9454-0963ae50b1c2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "FILMS",
+      "item": [
+        {
+          "name": "GET ALL FILMS",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0huo}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/films",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/films\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "GET FILMS SHOWING",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0huo}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/films/showing",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films",
+                "showing"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/films/showing\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "GET FILM BY ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/films/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/films/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "POST INSERT FILM",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\": \"filmtest\", \"description\": \"c un film lol\", \"release_date\": \"2026-10-10\", \"duration\": 0, \"is_showing\": false}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/films",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST \"{{url}}/films\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"title\\\": \\\"\\\", \\\"description\\\": \\\"\\\", \\\"release_date\\\": \\\"\\\", \\\"duration\\\": 0, \\\"is_showing\\\": false}\""
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH UPDATE FILM",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\": \"testfilm\", \"description\": \"ou oui c tjr un film \", \"release_date\": \"2026-10-10\", \"duration\": 0, \"is_showing\": false}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/films/7",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films",
+                "7"
+              ]
+            },
+            "description": "Generated from cURL: curl -X PATCH \"{{url}}/films/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"title\\\": \\\"\\\", \\\"description\\\": \\\"\\\", \\\"release_date\\\": \\\"\\\", \\\"duration\\\": 0, \\\"is_showing\\\": false}\""
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE FILM",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/films/7",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "films",
+                "7"
+              ]
+            },
+            "description": "Generated from cURL: curl -X DELETE \"{{url}}/films/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "LOGIN",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\" : \"compteasupp\",\r\n    \"password\" : \"mdp\"\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "REGISTER",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\" : \"compteasupp\",\r\n    \"password\" : \"mdp\",\r\n    \"email\" : \"acomptesupp@s.s\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/auth/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "USERS",
+      "item": [
+        {
+          "name": "GET ME",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0huo}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/users/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE USER",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/users/8",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "users",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH USER",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\" : \"comptasupp\",\r\n    \"email\" : \"comptesupp@s.s\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/users/8",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "users",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET USER BY ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTU4ODg3LCJleHAiOjE3OTQ1NjI0ODd9.ZAfznL5jiiDjIZ4vxH6JaNXgjPYQGDnzRWrSVpcbNuw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/users/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET ALL USERS",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/users",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ROOMS",
+      "item": [
+        {
+          "name": "GET ALL ROOMS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Response is an array', function () {\n    pm.expect(pm.response.json()).to.be.an('array');\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0huo}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/rooms",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/rooms\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "GET ROOM BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Response has id field', function () {\n    pm.expect(pm.response.json()).to.have.property('id');\n})\n\npm.test('404 si ID inexistant', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/rooms/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "rooms",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/rooms/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "POST CREATE ROOM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201 - Created', function () {\n    pm.response.to.have.status(201);\n})\n\npm.test('Response has id', function () {\n    var json = pm.response.json();\n    pm.expect(json).to.have.property('id');\n    pm.collectionVariables.set('roomId', json.id);\n})\n\npm.test('Name is correct', function () {\n    pm.expect(pm.response.json().name).to.eql('Salle Postman');\n})\n\npm.test('Capacity is correct', function () {\n    pm.expect(pm.response.json().capacity).to.eql(120);\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})\n\npm.test('403 si champs manquants', function () {\n    pm.expect(pm.response.code).to.not.equal(403);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Salle test\",\"capacity\":120}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/rooms",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "rooms"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST \"{{url}}/rooms\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"name\\\":\\\"Salle Postman\\\",\\\"capacity\\\":120}\""
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH UPDATE ROOM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Capacity updated', function () {\n    pm.expect(pm.response.json().capacity).to.eql(100);\n})\n\npm.test('404 si ID inexistant', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Miaou\",\"capacity\":150}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/rooms/5",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "rooms",
+                "5"
+              ]
+            },
+            "description": "Generated from cURL: curl -X PATCH \"{{url}}/rooms/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"capacity\\\":100}\""
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE ROOM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('404 si ID inexistant', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/rooms/6",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "rooms",
+                "6"
+              ]
+            },
+            "description": "Generated from cURL: curl -X DELETE \"{{url}}/rooms/:id\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SCREENINGS",
+      "item": [
+        {
+          "name": "GET ALL SCREENINGS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Response is an array', function () {\n    pm.expect(pm.response.json()).to.be.an('array');\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTY2MzUxLCJleHAiOjE3OTQ1Njk5NTF9.MeVkUDFAwgyW7Tm0RJh1e8h3ZWHtP7Bxem_3Ywp7zhs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/screenings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/screenings\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "GET SCREENINGS BY FILM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Response is an array', function () {\n    pm.expect(pm.response.json()).to.be.an('array');\n})\n\npm.test('404 si film inexistant', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTY2MzUxLCJleHAiOjE3OTQ1Njk5NTF9.MeVkUDFAwgyW7Tm0RJh1e8h3ZWHtP7Bxem_3Ywp7zhs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/screenings/film/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings",
+                "film",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/screenings/film/:filmId\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "GET SCREENING BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Response has id', function () {\n    pm.expect(pm.response.json()).to.have.property('id');\n})\n\npm.test('404 si séance inexistante', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTY2MzUxLCJleHAiOjE3OTQ1Njk5NTF9.MeVkUDFAwgyW7Tm0RJh1e8h3ZWHtP7Bxem_3Ywp7zhs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/screenings/1",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl -X GET \"{{url}}/screenings/:screeningId\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        },
+        {
+          "name": "POST CREATE SCREENING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201 - Created', function () {\n    pm.response.to.have.status(201);\n})\n\npm.test('Response has id', function () {\n    var json = pm.response.json();\n    pm.expect(json).to.have.property('id');\n    pm.collectionVariables.set('screeningId', json.id);\n})\n\npm.test('Film id correct', function () {\n    pm.expect(pm.response.json().film).to.eql(1);\n})\n\npm.test('Price correct', function () {\n    pm.expect(pm.response.json().price).to.eql(9.5);\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})\n\npm.test('403 si champs manquants', function () {\n    pm.expect(pm.response.code).to.not.equal(403);\n})\n\npm.test('404 si film ou salle inexistant', function () {\n    pm.expect(pm.response.code).to.not.equal(404);\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTY2MzUxLCJleHAiOjE3OTQ1Njk5NTF9.MeVkUDFAwgyW7Tm0RJh1e8h3ZWHtP7Bxem_3Ywp7zhs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"film\":1,\"room\":2,\"datetime\":\"2026-12-01 20:30:00\",\"price\":9.5}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/screenings",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST \"{{url}}/screenings\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"film\\\":1,\\\"room\\\":2,\\\"datetime\\\":\\\"2026-12-01 20:30:00\\\",\\\"price\\\":9.5}\""
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH UPDATE SCREENING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('Price updated', function () {\n    pm.expect(pm.response.json().price).to.eql(10);\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})\n\npm.test('404 si séance inexistante', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"price\":10}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/screenings/6",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings",
+                "6"
+              ]
+            },
+            "description": "Generated from cURL: curl -X PATCH \"{{url}}/screenings/:screeningId\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\" -H \"Content-Type: application/json\" -d \"{\\\"price\\\":10}\""
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE SCREENING",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 - OK', function () {\n    pm.response.to.have.status(200);\n})\n\npm.test('401 sans token', function () {\n    pm.expect(pm.response.code).to.not.equal(401);\n})\n\npm.test('404 si séance inexistante', function () {\n    if (pm.response.code === 404) {\n        pm.expect(pm.response.json()).to.have.property('message');\n    }\n})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c19pZCI6MSwidXNfdXNlcm5hbWUiOiJ0b3RvIiwidXNfZW1haWwiOiJ0b3RvQHRvdG8udGVzdCIsInVzX3JvbGUiOiJ1c2VyIiwiaWF0IjoxNzk0NTY2MzUxLCJleHAiOjE3OTQ1Njk5NTF9.MeVkUDFAwgyW7Tm0RJh1e8h3ZWHtP7Bxem_3Ywp7zhs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/screenings/6",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "screenings",
+                "6"
+              ]
+            },
+            "description": "Generated from cURL: curl -X DELETE \"{{url}}/screenings/:screeningId\" -H \"Authorization: Bearer {{json_web_token_0d5n}}\""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RESERVATIONS",
+      "item": [
+        {
+          "name": "GET ALL RESERVATIONS (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 OK', function () {\n    pm.response.to.have.status(200);\n});\n\npm.test('Response is JSON', function () {\n    pm.response.to.be.json;\n});\n\npm.test('401 sans token – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('403 si token utilisateur classique – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{json_web_token_0d5n}}"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/reservations",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "Récupère toutes les réservations. Réservé à l'administrateur ({{bearer_token_0hjc}}).\n\n**Codes attendus :**\n- 200 : succès\n- 401 : aucun token fourni\n- 403 : token d'un utilisateur classique"
+          },
+          "response": []
+        },
+        {
+          "name": "GET MY RESERVATIONS (user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 OK', function () {\n    pm.response.to.have.status(200);\n});\n\npm.test('Response is JSON', function () {\n    pm.response.to.be.json;\n});\n\npm.test('401 sans token – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_0huo}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reservations/me",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservations",
+                "me"
+              ]
+            },
+            "description": "Récupère les réservations de l'utilisateur connecté ({{bearer_token_1197}}).\n\n**Codes attendus :**\n- 200 : succès\n- 401 : aucun token fourni"
+          },
+          "response": []
+        },
+        {
+          "name": "GET RESERVATIONS BY SCREENING (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 OK', function () {\n    pm.response.to.have.status(200);\n});\n\npm.test('Response is JSON', function () {\n    pm.response.to.be.json;\n});\n\npm.test('401 sans token – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('403 si token utilisateur classique – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('404 si séance inexistante – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reservations/screening/3",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservations",
+                "screening",
+                "3"
+              ]
+            },
+            "description": "Récupère toutes les réservations d'une séance. Réservé à l'administrateur ({{bearer_token_0hjc}}).\n\n**Codes attendus :**\n- 200 : succès\n- 401 : aucun token fourni\n- 403 : token d'un utilisateur classique\n- 404 : séance introuvable"
+          },
+          "response": []
+        },
+        {
+          "name": "POST CREATE RESERVATION (user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201 Created', function () {\n    pm.response.to.have.status(201);\n});\n\npm.test('Response is JSON', function () {\n    pm.response.to.be.json;\n});\n\npm.test('Sauvegarde reservationId', function () {\n    var json = pm.response.json();\n    pm.expect(json).to.have.property('_id');\n    pm.collectionVariables.set('reservationId', json._id);\n});\n\npm.test('401 sans token – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('403 double réservation / capacité dépassée – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('404 si séance inexistante – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{json_web_token_10kg}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"screening\": \"2\",\n  \"seats\": \"2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/reservations",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "Crée une réservation pour l'utilisateur identifié par le JWT ({{bearer_token_1197}}). L'utilisateur est déterminé côté serveur via le token — aucun user_id n'est envoyé.\n\nAprès une création réussie (201), le champ `_id` de la réponse est automatiquement sauvegardé dans la variable de collection `reservationId`.\n\n**Codes attendus :**\n- 201 : réservation créée\n- 401 : aucun token fourni\n- 403 : double réservation sur la même séance, ou capacité dépassée\n- 404 : séance introuvable"
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE RESERVATION (user / admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 OK', function () {\n    pm.response.to.have.status(200);\n});\n\npm.test('Response is JSON', function () {\n    pm.response.to.be.json;\n});\n\npm.test('401 sans token – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('403 si autre utilisateur tente d\\'annuler – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('404 si réservation inexistante – vérification manuelle', function () {\n    pm.expect(true).to.be.true;\n});\n\npm.test('Erreur contient champ error (si erreur) – vérification manuelle', function () {\n    if (pm.response.code !== 200) {\n        var json = pm.response.json();\n        pm.expect(json).to.have.property('error');\n    } else {\n        pm.expect(true).to.be.true;\n    }\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{tokenUser}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/reservations/4",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "reservations",
+                "4"
+              ]
+            },
+            "description": "Annule une réservation. Un utilisateur peut annuler sa propre réservation ({{bearer_token_1197}}). Un administrateur peut annuler n'importe quelle réservation (remplacer tokenUser par tokenAdmin).\n\n**Codes attendus :**\n- 200 : annulation réussie\n- 401 : aucun token fourni\n- 403 : tentative d'annulation d'une réservation appartenant à un autre utilisateur\n- 404 : réservation introuvable"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    },
+    {
+      "key": "json_web_token_0d5n",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0huo",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_10kg",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0ju6",
+      "secret": true
+    }
+  ]
+}

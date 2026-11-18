@@ -1,6 +1,7 @@
 //IMPORTS//
 import express from "express";
 import filmsController from '../Controllers/films.controller.js'
+import checkAdmin from '../Middlewares/admin.middleware.js';
 
 const router = express.Router();
 
@@ -10,10 +11,10 @@ router.get("/showing", filmsController.getFilmsShowing);
 
 router.get("/:id", filmsController.getById);
 
-router.post("/", filmsController.insert);
+router.post("/", checkAdmin, filmsController.insert);
 
-router.patch("/:id", filmsController.update);
+router.patch("/:id", checkAdmin, filmsController.update);
 
-router.delete("/:id", filmsController.deleteFilm);
+router.delete("/:id", checkAdmin, filmsController.deleteFilm);
 
 export default router;

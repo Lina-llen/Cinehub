@@ -20,6 +20,14 @@ async function getByFilm(filmId) {
     return rows;
 }
 
+//GET UPCOMING BY FILM//
+async function getUpcomingByFilm(filmId) {
+    const [rows] = await Db.query(
+        `${screeningFields} WHERE screenings.sc_film = ? AND screenings.sc_datetime > NOW() ORDER BY screenings.sc_datetime`,
+        [filmId]);
+    return rows;
+}
+
 //GET BY ID//
 async function getById(id) {
     const [rows] = await Db.query(`${screeningFields} WHERE screenings.sc_id = ?`, [id]);
@@ -52,6 +60,7 @@ async function deleteScreening(id) {
 export default {
     getAll,
     getByFilm,
+    getUpcomingByFilm,
     getById,
     insert,
     update,

@@ -45,7 +45,7 @@ CREATE TABLE reservations (
     re_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     UNIQUE (re_user, re_screening),
-    FOREIGN KEY (re_user) REFERENCES users(us_id),
+    FOREIGN KEY (re_user) REFERENCES users(us_id) ON DELETE CASCADE,
     FOREIGN KEY (re_screening) REFERENCES screenings(sc_id)
 );
 
