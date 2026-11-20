@@ -1,0 +1,1453 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CineHub — Présentation orale</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --night: #190f33;
+      --aubergine: #2b1b55;
+      --cream: #fff4dc;
+      --popcorn: #ffc633;
+      --raspberry: #ff3e7f;
+      --mint: #35e0b5;
+      --muted: #c9c0d8;
+      --line: rgba(255, 244, 220, 0.18);
+      --shadow: 0 22px 65px rgba(0, 0, 0, 0.25);
+      font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--cream);
+      background:
+        radial-gradient(ellipse at 86% 7%, rgba(255, 198, 51, 0.11), transparent 30%),
+        radial-gradient(ellipse at 5% 90%, rgba(53, 224, 181, 0.08), transparent 28%),
+        var(--night);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .toolbar {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem clamp(1rem, 3vw, 2.5rem);
+      border-bottom: 1px solid var(--line);
+      background: rgba(25, 15, 51, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .toolbar__brand {
+      color: var(--cream);
+      font-size: 0.9rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+    }
+
+    .toolbar__brand span {
+      color: var(--popcorn);
+    }
+
+    .toolbar__controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.55rem;
+    }
+
+    .control {
+      padding: 0.55rem 0.85rem;
+      color: var(--cream);
+      border: 1px solid var(--line);
+      border-radius: 0.6rem;
+      background: var(--aubergine);
+      cursor: pointer;
+    }
+
+    .control:hover,
+    .control[aria-pressed="true"] {
+      color: var(--night);
+      border-color: var(--popcorn);
+      background: var(--popcorn);
+    }
+
+    .control--accent {
+      color: var(--night);
+      border-color: var(--popcorn);
+      background: var(--popcorn);
+      font-weight: 800;
+    }
+
+    .slide-count {
+      min-width: 4.5rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: 1rem;
+      width: min(100% - 2rem, 1500px);
+      margin: 1.5rem auto 3rem;
+    }
+
+    .slide {
+      position: relative;
+      display: none;
+      overflow: hidden;
+      min-height: min(73vh, 810px);
+      padding: clamp(1.5rem, 5vw, 4.5rem);
+      border: 1px solid var(--line);
+      border-radius: 1.4rem;
+      background:
+        linear-gradient(135deg, rgba(43, 27, 85, 0.97), rgba(25, 15, 51, 0.98));
+      box-shadow: var(--shadow);
+    }
+
+    .slide.is-active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide::after {
+      position: absolute;
+      right: -9rem;
+      bottom: -13rem;
+      width: 28rem;
+      height: 28rem;
+      border: 1px solid rgba(255, 198, 51, 0.18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2.5rem rgba(255, 198, 51, 0.035), 0 0 0 5rem rgba(255, 198, 51, 0.025);
+      content: "";
+      pointer-events: none;
+    }
+
+    .slide__top,
+    .slide__body,
+    .slide__bottom {
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: clamp(1.5rem, 4vh, 3rem);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .slide__section {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .slide__section::before {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--raspberry);
+      box-shadow: 0 0 1rem rgba(255, 62, 127, 0.7);
+      content: "";
+    }
+
+    .slide__number {
+      color: var(--popcorn);
+    }
+
+    .slide__body {
+      flex: 1;
+    }
+
+    .slide h1,
+    .slide h2 {
+      max-width: 1050px;
+      margin: 0;
+      font-family: "Unbounded", "Arial Black", "Segoe UI", sans-serif;
+      font-size: clamp(2.1rem, 5vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -0.055em;
+      line-height: 1.08;
+    }
+
+    .slide--title h1 {
+      max-width: 900px;
+      font-size: clamp(3.2rem, 9vw, 7rem);
+      letter-spacing: -0.075em;
+    }
+
+    .slide--title h1 span {
+      color: var(--popcorn);
+    }
+
+    .slide__lead {
+      max-width: 900px;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.55rem);
+      line-height: 1.55;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--columns, 2), minmax(0, 1fr));
+      gap: clamp(0.7rem, 1.4vw, 1.2rem);
+      margin-top: clamp(1.5rem, 4vh, 3rem);
+    }
+
+    .card {
+      min-height: 8.5rem;
+      padding: clamp(1rem, 2vw, 1.45rem);
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--card-accent, var(--popcorn));
+      border-radius: 1rem;
+      background: rgba(43, 27, 85, 0.78);
+    }
+
+    .card__eyebrow {
+      margin-bottom: 0.5rem;
+      color: var(--card-accent, var(--popcorn));
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin: 0 0 0.55rem;
+      font-size: clamp(1rem, 1.5vw, 1.28rem);
+      line-height: 1.25;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.88rem, 1.1vw, 1rem);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .callout {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-top: clamp(1rem, 2.5vh, 1.8rem);
+      padding: 0.9rem 1.1rem;
+      border: 1px solid rgba(53, 224, 181, 0.35);
+      border-left: 4px solid var(--mint);
+      border-radius: 0.75rem;
+      background: rgba(53, 224, 181, 0.07);
+      color: var(--cream);
+      font-size: clamp(0.85rem, 1.05vw, 0.98rem);
+      line-height: 1.45;
+    }
+
+    .callout::before {
+      color: var(--mint);
+      font-size: 1.1rem;
+      font-weight: 900;
+      content: "→";
+    }
+
+    .callout--warning {
+      border-color: rgba(255, 62, 127, 0.42);
+      border-left-color: var(--raspberry);
+      background: rgba(255, 62, 127, 0.08);
+    }
+
+    .callout--warning::before {
+      color: var(--raspberry);
+      content: "!";
+    }
+
+    .slide__bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    #liveNotes {
+      display: none;
+      align-self: stretch;
+      padding: 1.4rem;
+      border: 1px solid rgba(255, 198, 51, 0.35);
+      border: 1px solid rgba(255, 198, 51, 0.45);
+      border-radius: 1rem;
+      background: var(--aubergine);
+      box-shadow: var(--shadow);
+      max-height: min(78vh, 850px);
+      overflow-y: auto;
+    }
+
+    #liveNotes h2 {
+      margin: 0 0 0.8rem;
+      color: var(--popcorn);
+      font-family: "Unbounded", "Arial Black", "Segoe UI", sans-serif;
+      font-size: 1.05rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.5rem;
+    }
+
+    #liveNotes p {
+      margin: 0 0 0.9rem;
+      margin: 0 0 0.85rem;
+      color: var(--cream);
+      line-height: 1.58;
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    #liveNotes strong {
+      color: var(--popcorn);
+      font-weight: 700;
+    }
+
+    #liveNotes code {
+      font-family: "Consolas", "Courier New", monospace;
+      background: rgba(25, 15, 51, 0.75);
+      border: 1px solid rgba(255, 198, 51, 0.2);
+      padding: 0.12rem 0.35rem;
+      border-radius: 0.3rem;
+      color: var(--mint);
+      font-size: 0.9em;
+    }
+
+    .guide-page strong {
+      color: var(--popcorn);
+    }
+
+    .guide-page code {
+      font-family: "Consolas", "Courier New", monospace;
+      background: rgba(25, 15, 51, 0.75);
+      border: 1px solid rgba(255, 198, 51, 0.2);
+      padding: 0.12rem 0.35rem;
+      border-radius: 0.3rem;
+      color: var(--mint);
+      font-size: 0.9em;
+    }
+
+    #liveNotes p:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide {
+      display: none;
+      width: min(100% - 2rem, 1100px);
+      margin: 2rem auto 4rem;
+    }
+
+    .guide__intro,
+    .guide-page {
+      margin-bottom: 1rem;
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      background: var(--aubergine);
+      box-shadow: var(--shadow);
+    }
+
+    .guide__intro h1,
+    .guide-page h2 {
+      margin: 0 0 1rem;
+      color: var(--popcorn);
+      font-family: "Unbounded", "Arial Black", "Segoe UI", sans-serif;
+      line-height: 1.2;
+    }
+
+    .guide__intro h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+    }
+
+    .guide-page h2 {
+      font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+    }
+
+    .guide p,
+    .guide li {
+      color: var(--cream);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .guide p {
+      margin: 0 0 0.8rem;
+    }
+
+    .guide p:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide ul {
+      margin: 0.5rem 0 1rem;
+      padding-left: 1.25rem;
+    }
+
+    .guide li+li {
+      margin-top: 0.35rem;
+    }
+
+    .guide__tag {
+      margin-bottom: 0.6rem;
+      color: var(--mint) !important;
+      font-size: 0.74rem !important;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .guide__quote {
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-left: 4px solid var(--popcorn);
+      background: rgba(25, 15, 51, 0.65);
+      color: var(--cream);
+      font-style: italic;
+      line-height: 1.55;
+    }
+
+    .guide code {
+      padding: 0.08rem 0.32rem;
+      border-radius: 0.25rem;
+      background: var(--night);
+      color: var(--popcorn);
+      font-family: Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .guide__table-wrap {
+      overflow-x: auto;
+    }
+
+    .guide table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .guide th,
+    .guide td {
+      padding: 0.65rem;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .guide th {
+      color: var(--popcorn);
+    }
+
+    .guide td {
+      color: var(--cream);
+    }
+
+    .mode-presentation .stage {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mode-speaker .stage {
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+    }
+
+    .mode-speaker #liveNotes {
+      display: block;
+    }
+
+    .mode-guide .stage {
+      display: none;
+    }
+
+    .mode-guide .guide {
+      display: block;
+    }
+
+    .mode-print-slides .toolbar,
+    .mode-print-guide .toolbar {
+      display: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .mode-speaker .stage {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .mode-speaker #liveNotes {
+        display: block;
+      }
+
+      .slide {
+        min-height: 0;
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar__controls {
+        justify-content: flex-start;
+      }
+
+      .stage {
+        width: min(100% - 1rem, 1500px);
+        margin-top: 0.5rem;
+      }
+
+      .slide {
+        padding: 1.2rem;
+        border-radius: 0.9rem;
+      }
+
+      .slide__top {
+        margin-bottom: 1.4rem;
+      }
+
+      .card-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .card {
+        min-height: 0;
+      }
+
+      .slide__bottom {
+        font-size: 0.65rem;
+      }
+    }
+
+    @media print {
+      body {
+        min-width: 0;
+        color: var(--cream);
+        background: var(--night) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .toolbar {
+        display: none !important;
+      }
+
+      .stage {
+        display: block;
+        width: 100%;
+        margin: 0;
+      }
+
+      .slide {
+        display: flex !important;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        padding: 5%;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+      }
+
+      #liveNotes {
+        display: none !important;
+      }
+
+      .mode-print-slides .guide {
+        display: none !important;
+      }
+
+      .mode-print-slides .slide {
+        display: flex !important;
+      }
+
+      .mode-print-guide .stage {
+        display: none !important;
+      }
+
+      .mode-print-guide .guide {
+        display: block !important;
+        width: 100%;
+        margin: 0;
+      }
+
+      .mode-print-guide .guide__intro,
+      .mode-print-guide .guide-page {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+      }
+
+      .mode-print-guide .guide__intro,
+      .mode-print-guide .guide-page {
+        background: var(--aubergine) !important;
+      }
+
+      .mode-print-guide .guide-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
+      .mode-print-guide .guide code {
+        background: var(--night) !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="mode-presentation">
+  <header class="toolbar" aria-label="Commandes de la présentation">
+    <div class="toolbar__brand">CINE<span>HUB</span> · ORAL</div>
+    <div class="toolbar__controls">
+      <button class="control" id="modePresentation" type="button" aria-pressed="true">Présentation</button>
+      <button class="control" id="modeSpeaker" type="button" aria-pressed="false">Notes orales</button>
+      <button class="control" id="modeGuide" type="button" aria-pressed="false">Guide complet</button>
+      <span class="slide-count" id="slideCount" aria-live="polite"></span>
+      <button class="control" id="previousSlide" type="button" aria-label="Diapositive précédente">←</button>
+      <button class="control" id="nextSlide" type="button" aria-label="Diapositive suivante">→</button>
+      <button class="control control--accent" id="printCurrent" type="button">Imprimer / PDF</button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <section class="deck" id="deck" aria-label="Diapositives"></section>
+    <aside id="liveNotes" aria-live="polite"></aside>
+  </main>
+  <main class="guide" id="guide" aria-label="Guide de préparation à l'oral"></main>
+
+  <script>
+    const slides = [
+      {
+        section: "Présentation",
+        title: "CINE<span>HUB</span>",
+        titleHtml: true,
+        lead: "Une application web pour consulter les films, choisir une séance et gérer des réservations — avec un espace d’administration.",
+        cards: [
+          { eyebrow: "Projet", title: "CineHub", body: "Gestion d’un cinéma\nFront React · API Express · MySQL", accent: "popcorn" },
+          { eyebrow: "À l’oral", title: "Ce que je vais expliquer", body: "Parcours utilisateur, règles métier, architecture, sécurité et limites connues.", accent: "mint" },
+          { eyebrow: "À l’oral", title: "Ce que je vais expliquer", body: "Parcours utilisateur, règles métier, architecture, sécurité et gestion du code.", accent: "mint" },
+        ],
+        callout: "Support en deux modes : « Présentation » pour projeter les slides, « Notes orales » ou « Guide complet » pour préparer le discours.",
+        callout: "Support en deux modes : « Présentation » pour projeter les slides, « Notes orales » pour afficher ce guide concret pendant la soutenance.",
+        notes: [
+          "Ouvre avec le but fonctionnel plutôt qu’avec les technologies : CineHub relie un catalogue de films, des séances et des réservations.",
+          "Annonce que tu vas d’abord montrer le parcours, puis expliquer comment les données circulent du navigateur jusqu’à MySQL. Garde la technique détaillée pour les questions.",
+          "Le cahier des charges original n’est pas rangé dans le dépôt courant. Le bilan de conformité de ce support reprend les exigences recensées lors de la revue précédente et les demandes formulées ensuite; compare-le au document remis par ton école avant l’oral."
+          "<strong>Ce que je dis :</strong> « Bonjour, je vous présente CineHub, une application web complète de gestion de cinéma qui relie un catalogue de films, des séances programmées en salles et les réservations de spectateurs, complétée par un espace d'administration. »",
+          "<strong>Dans le code :</strong> Le projet est structuré en deux dossiers étanches : <code>front/</code> (React 19 propulsé par Vite) et <code>back/</code> (API REST avec Express 5 et MySQL).",
+          "<strong>Fil conducteur :</strong> J'aborderai d'abord le parcours utilisateur et les règles métier, puis j'expliquerai concrètement comment les données transitent du navigateur jusqu'à la base MySQL."
+        ],
+        quote: "« CineHub permet à un utilisateur de trouver une séance et de réserver des places, tandis qu’un administrateur gère les principales données du cinéma. »"
+      },
+      {
+        section: "01 · Besoin",
+        title: "Deux profils, deux parcours",
+        lead: "Le produit sépare les usages du spectateur et les opérations d’administration.",
+        columns: 2,
+        cards: [
+          { eyebrow: "Spectateur", title: "Trouver et réserver", body: "Créer un compte, se connecter, découvrir les films, consulter les prochaines séances et réserver un nombre de places.", accent: "mint" },
+          { eyebrow: "Spectateur", title: "Suivre son activité", body: "Voir ses réservations, les annuler, modifier son profil et consulter les séances dans le calendrier.", accent: "popcorn" },
+          { eyebrow: "Administrateur", title: "Administrer", body: "Gérer les films et les utilisateurs, consulter les réservations et modifier le prix d’une séance.", accent: "raspberry" },
+          { eyebrow: "Contrainte", title: "Aucune API cinéma externe", body: "Les films, les séances et les réservations viennent de la base locale; les affiches sont aussi hébergées par le backend.", accent: "mint" },
+          { eyebrow: "Administrateur", title: "Administrer", body: "Gérer les films, salles et utilisateurs, ajouter ou supprimer des séances et modifier leur salle ou tarif.", accent: "raspberry" },
+          { eyebrow: "Contrainte", title: "Aucune API cinéma externe", body: "Les films, séances et réservations sont stockés en local; les affiches sont hébergées par le backend.", accent: "mint" },
+        ],
+        callout: "Une réservation porte sur une séance, pas seulement sur un film : date, salle, prix et capacité sont attachés à la séance.",
+        notes: [
+          "Présente les deux rôles de façon concrète. Le spectateur navigue dans les films, choisit une séance, indique le nombre de places, puis retrouve la réservation dans son profil ou le calendrier.",
+          "L’administrateur intervient sur des données plus sensibles. Le front masque les fonctions d’administration aux comptes classiques, et l’API vérifie aussi le rôle côté serveur.",
+          "La contrainte « sans API externes » est respectée pour le catalogue et les affiches : les informations sont locales. Le projet n’intègre pas de paiement en ligne ni de système de sièges numérotés."
+          "<strong>Deux rôles en base :</strong> La colonne <code>us_role</code> ('user' ou 'admin') dans la table <code>users</code> sépare les spectateurs des gestionnaires.",
+          "<strong>Parcours spectateur :</strong> S'inscrit, se connecte, choisit une séance future, indique son nombre de places et retrouve ses billets dans son profil ou le calendrier.",
+          "<strong>Parcours administrateur :</strong> Accède au panneau <code>/admin</code> pour ajouter/modifier/supprimer des films et des séances, changer la salle d'une séance existante et gérer les comptes utilisateurs.",
+          "<strong>Contrainte forte :</strong> 100 % autonome, aucune dépendance vers une API tierce (TMDB ou Allociné). Toutes les données et images sont locales."
+        ],
+        quote: "Insiste sur la distinction entre film et séance : un même film peut avoir plusieurs dates, salles et prix."
+      },
+      {
+        section: "02 · Architecture",
+        title: "Du navigateur à la base",
+        lead: "Chaque couche a une responsabilité et communique avec la suivante par une API HTTP.",
+        columns: 4,
+        cards: [
+          { eyebrow: "1 · Interface", title: "React + Vite", body: "Pages, formulaires, navigation, états de chargement et retours utilisateur.", accent: "popcorn" },
+          { eyebrow: "2 · Transport", title: "HTTP / JSON", body: "Axios appelle les routes Express; un JWT est envoyé en Bearer pour les routes protégées.", accent: "mint" },
+          { eyebrow: "3 · Serveur", title: "Express", body: "Routes → contrôleurs → modèles. Les contrôleurs appliquent les règles métier.", accent: "raspberry" },
+          { eyebrow: "4 · Persistance", title: "MySQL + fichiers", body: "MySQL garde les entités et chemins d’affiche; les fichiers images restent dans uploads/.", accent: "popcorn" },
+          { eyebrow: "1 · Interface", title: "React + Vite", body: "Composants, hooks, formulaires contrôlés, états de chargement et retours utilisateur.", accent: "popcorn" },
+          { eyebrow: "2 · Transport", title: "HTTP / Axios", body: "Appels asynchrones async/await; injection du JWT dans l'en-tête Authorization: Bearer.", accent: "mint" },
+          { eyebrow: "3 · Serveur", title: "Express 5", body: "Routes → Middlewares (sécurité/rôle) → Contrôleurs (règles métier et validation).", accent: "raspberry" },
+          { eyebrow: "4 · Persistance", title: "MySQL + Fichiers", body: "Modèles avec requêtes préparées (?) sur MySQL; stockage des images dans uploads/.", accent: "popcorn" },
+        ],
+        callout: "Flux type : action de l’utilisateur → appel Axios → route → contrôleur → requête SQL paramétrée → réponse JSON → mise à jour React.",
+        callout: "Flux type : Clic utilisateur → Service Axios → Route Express → Contrôleur → Modèle SQL (?) → Réponse JSON → Rendu React.",
+        notes: [
+          "Explique le schéma de gauche à droite. React ne se connecte jamais directement à MySQL. Il envoie une requête HTTP à Express; le serveur vérifie l’accès et parle à la base.",
+          "Les responsabilités sont séparées : la route associe URL, méthode et middlewares; le contrôleur lit la requête et construit la réponse; le modèle contient les requêtes SQL.",
+          "Pour une affiche, le fichier suit un trajet particulier : Multer l’enregistre dans le dossier du backend, puis MySQL conserve uniquement le chemin relatif. Express expose ce dossier en lecture statique."
+          "<strong>Règle d'or :</strong> React ne se connecte jamais directement à MySQL. Il dialogue avec l'API Express en JSON via Axios.",
+          "<strong>Rôle de chaque brique :</strong> Le composant React gère l'état d'affichage (loading, feedback) ; le module de service (ex: <code>screeningsServices.js</code>) isole l'URL et la méthode HTTP ; le contrôleur Express applique les règles métier ; le modèle SQL exécute la requête avec des paramètres sécurisés <code>?</code>.",
+          "<strong>En cas d'erreur :</strong> Le serveur renvoie un code HTTP explicite (ex: 403, 404, 409) avec un JSON <code>{ error: '...' }</code>, qu'Axios capture dans le bloc <code>catch (error)</code> du front."
+        ],
+        quote: "Si on te demande pourquoi plusieurs couches : cela rend les routes, les règles métier et les requêtes plus faciles à repérer et à tester séparément."
+        quote: "Si on te demande pourquoi plusieurs couches : cela sépare l'interface, la sécurité, la logique métier et la persistance des données."
+      },
+      {
+        section: "03 · Données",
+        title: "Un modèle relationnel simple",
+        lead: "Cinq tables couvrent les comptes, le catalogue, les salles, les séances et les réservations.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Compte", title: "users", body: "Un utilisateur possède un rôle user/admin et peut créer plusieurs réservations.", accent: "popcorn" },
+          { eyebrow: "Catalogue", title: "films", body: "Titre, description, durée, genre, date, visibilité et chemin d’affiche facultatif.", accent: "mint" },
+          { eyebrow: "Lieu", title: "rooms", body: "Nom de salle et capacité maximale, utilisés pour contrôler les places.", accent: "raspberry" },
+          { eyebrow: "Programmation", title: "screenings", body: "Relie un film et une salle à une date/heure et à un prix par place.", accent: "mint" },
+          { eyebrow: "Transaction métier", title: "reservations", body: "Relie un utilisateur à une séance; stocke le nombre de places et la date de création.", accent: "popcorn" },
+          { eyebrow: "Compte", title: "users", body: "us_id, us_username, us_password (hash bcrypt), us_email, us_role ('user'/'admin').", accent: "popcorn" },
+          { eyebrow: "Catalogue", title: "films", body: "fi_id, fi_title, fi_description, fi_duration, fi_genre, fi_release_date, fi_image.", accent: "mint" },
+          { eyebrow: "Lieu", title: "rooms", body: "ro_id, ro_name, ro_capacity (capacité maximale contrôlée lors des réservations).", accent: "raspberry" },
+          { eyebrow: "Programmation", title: "screenings", body: "sc_id, sc_film (FK), sc_room (FK), sc_datetime, sc_price (tarif unitaire).", accent: "mint" },
+          { eyebrow: "Réservation", title: "reservations", body: "re_id, re_user (FK), re_screening (FK), re_seats (nombre de places).", accent: "popcorn" },
+        ],
+        callout: "Une contrainte UNIQUE sur (re_user, re_screening) empêche deux réservations distinctes du même utilisateur pour la même séance.",
+        callout: "Contrainte UNIQUE sur (re_user, re_screening) : un utilisateur ne peut pas créer deux réservations distinctes pour la même séance.",
+        notes: [
+          "Décris les cardinalités : un film peut avoir plusieurs séances; chaque séance appartient à un film et à une salle; une salle accueille plusieurs séances.",
+          "La réservation relie l’utilisateur à la séance et stocke seulement le nombre de places. Il n’y a pas de plan de salle ni de numéro de siège individuel.",
+          "Les clés étrangères protègent l’intégrité. Le schéma utilise des suppressions en cascade pour que les réservations dépendantes ne restent pas orphelines quand une séance, un film ou un utilisateur est supprimé.",
+          "Le champ fi_image est nullable : les films existants restent valides sans affiche. Il reçoit un chemin comme films/identifiant-aleatoire.jpg, pas le contenu binaire de l’image."
+          "<strong>Cardinalités clés :</strong> Un film possède plusieurs séances. Une salle accueille plusieurs séances. Une réservation associe un utilisateur et une séance.",
+          "<strong>Où est le prix ?</strong> Dans <code>screenings.sc_price</code>, pas dans <code>films</code>. Une séance du matin peut ainsi coûter 7 € et celle du soir 10 € pour le même film.",
+          "<strong>Où est la capacité ?</strong> Dans <code>rooms.ro_capacity</code>. L'API additionne les places réservées de la séance pour vérifier qu'on ne dépasse pas ce plafond.",
+          "<strong>Intégrité SQL :</strong> Toutes les clés étrangères ont <code>ON DELETE CASCADE</code>. Si un film ou une séance est supprimé, ses réservations associées sont automatiquement nettoyées par MySQL."
+        ],
+        quote: "Le prix est dans screenings, pas dans films : le prix peut donc varier d’une séance à une autre."
+        quote: "Le prix et la salle sont attachés à la séance, car ils varient d'une projection à l'autre."
+      },
+      {
+        section: "04 · Front",
+        title: "Les pages et leurs responsabilités",
+        lead: "Le routeur React choisit la page; les wrappers protègent les espaces privés et administrateur.",
+        lead: "Le routeur React organise la navigation et protège l’accès avec AuthContext et les Wrappers.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Entrée", title: "Accueil, connexion, inscription", body: "Formulaires contrôlés par le state; messages de succès/erreur; connexion avec retour vers la page demandée.", accent: "popcorn" },
+          { eyebrow: "Catalogue", title: "Films et détail", body: "Liste des films à l’affiche; fiche avec durée, description, prochaines séances, salle et prix.", accent: "mint" },
+          { eyebrow: "Compte", title: "Profil et réservations", body: "Modification du profil, compteur, historique des réservations et annulation.", accent: "raspberry" },
+          { eyebrow: "Planning", title: "Calendrier", body: "Calendrier mois/semaine/jour et fenêtre de détail pour réserver ou annuler.", accent: "mint" },
+          { eyebrow: "Gestion", title: "Administration", body: "Une route réservée aux admins, avec quatre sections conditionnelles dans AdminPage.", accent: "popcorn" },
+          { eyebrow: "Entrée", title: "Connexion & Inscription", body: "Formulaires contrôlés (handleChange), validation, messages de feedback et stockage du token.", accent: "popcorn" },
+          { eyebrow: "Catalogue", title: "Films & Fiche détail", body: "Grille des films à l'affiche; fiche avec synopsis, prochaines séances, choix de la salle et tarif.", accent: "mint" },
+          { eyebrow: "Espace membre", title: "Profil & Réservations", body: "Mise à jour des coordonnées, changement de mot de passe et annulation de réservations.", accent: "raspberry" },
+          { eyebrow: "Planning", title: "Calendrier", body: "Affichage des séances et des réservations avec FullCalendar, chargé en Suspense / Lazy.", accent: "mint" },
+          { eyebrow: "Gestion", title: "Administration (/admin)", body: "Dashboard complet protégé par AdminRoute avec onglets films, séances, salles et utilisateurs.", accent: "popcorn" },
+        ],
+        callout: "Les routes principales sont définies dans App.jsx; les données sont récupérées par des services séparés dans front/src/Services/.",
+        callout: "Dans App.jsx, AuthWrapper et AdminRoute protègent les composants sans alourdir le code des pages.",
+        notes: [
+          "Parcours les pages dans l’ordre d’une démonstration. La route /films et /films/:id exigent un compte connecté. /calendrier est chargé en lazy loading, donc son code peut être chargé à la demande.",
+          "AuthWrapper affiche la page de connexion aux visiteurs non connectés; après connexion, la page demandée s’ouvre. AdminRoute réserve le tableau de bord au rôle admin.",
+          "Les écrans ont des états explicites : chargement, erreur, liste vide, succès. Les éléments de formulaire sont contrôlés par React et les appels réseau sont regroupés dans des services."
+          "<strong>Initialisation dans <code>App.jsx</code> :</strong> Au chargement, on initialise l'état avec <code>useState(authServices.isConnected())</code> et <code>useState(authServices.getUser())</code>. Ces valeurs sont injectées dans <code>&lt;AuthContext.Provider&gt;</code>.",
+          "<strong>Protection simple avec <code>AuthWrapper.jsx</code> :</strong> Il lit <code>const { isConnected } = useContext(AuthContext)</code> et affiche <code>{isConnected ? children : &lt;LoginPage /&gt;}</code>.",
+          "<strong>Protection admin avec <code>AdminRoute.jsx</code> :</strong> Si non connecté, il renvoie <code>&lt;LoginPage /&gt;</code> ; si <code>user.us_role !== 'admin'</code>, il redirige vers <code>/</code> avec <code>&lt;Navigate to=\"/\" replace /&gt;</code> ; sinon il affiche la page admin.",
+          "<strong>Optimisation :</strong> <code>CalendarPage</code> est importé avec <code>lazy()</code> et un composant <code>Suspense</code> pour alléger le chargement initial de l'application."
+        ],
+        quote: "React Router gère la navigation côté client; cela ne remplace pas les autorisations du backend."
+        quote: "React Router gère l'affichage côté client; les middlewares Express garantissent la sécurité côté serveur."
+      },
+      {
+        section: "05 · Back",
+        title: "Une API REST organisée par ressource",
+        lead: "Express expose les ressources et délègue le traitement aux contrôleurs et modèles.",
+        lead: "Express structure les routes et délègue la logique aux contrôleurs et aux modèles SQL.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Identité", title: "/auth", body: "POST /register · POST /login", accent: "popcorn" },
+          { eyebrow: "Identité", title: "/auth", body: "POST /auth/register · POST /auth/login", accent: "popcorn" },
+          { eyebrow: "Comptes", title: "/users", body: "GET /me · GET liste admin · PATCH profil · PATCH /me/password · DELETE compte", accent: "mint" },
+          { eyebrow: "Catalogue", title: "/films", body: "GET /showing · GET /:id · POST/PATCH/DELETE admin", accent: "raspberry" },
+          { eyebrow: "Programmation", title: "/rooms · /screenings", body: "Lecture publique connectée; écritures protégées par le rôle admin.", accent: "mint" },
+          { eyebrow: "Réservations", title: "/reservations", body: "GET /me · GET listes admin · POST réservation · DELETE selon propriétaire ou admin.", accent: "popcorn" },
+          { eyebrow: "Catalogue", title: "/films", body: "GET /showing · GET /:id · POST/PATCH/DELETE (réservés à l'admin)", accent: "raspberry" },
+          { eyebrow: "Programmation", title: "/rooms · /screenings", body: "GET public connecté · POST/PATCH/DELETE séances et salles (réservés à l'admin)", accent: "mint" },
+          { eyebrow: "Réservations", title: "/reservations", body: "GET /me (mes billets) · POST (réserver) · DELETE /:id (annuler)", accent: "popcorn" },
+        ],
+        callout: "Les routes sont regroupées dans back/Routes; les requêtes préparées avec ? sont dans back/Models.",
+        callout: "Architecture MVC : Routes/ associe URL et méthode, Controllers/ valide les règles métier, Models/ dialogue avec MySQL.",
+        notes: [
+          "Pour expliquer l’organisation, prends une route concrète : router.post('/films', checkAdmin, uploadFilmImage, filmsController.insert). Elle protège l’accès, traite éventuellement le fichier puis appelle le contrôleur.",
+          "Le contrôleur valide les données métier, appelle le modèle, puis renvoie un statut et du JSON. Le modèle exécute la requête SQL avec des paramètres séparés.",
+          "Le serveur utilise Express, mysql2/promise et dotenv. Les secrets et paramètres de connexion doivent être dans .env local, pas dans le dépôt."
+          "<strong>Structure MVC claire :</strong> Dans <code>back/Routes/screenings.route.js</code>, on définit par exemple <code>router.delete('/:id', checkAdmin, screeningController.deleteScreening)</code>.",
+          "<strong>Rôle du contrôleur :</strong> Il vérifie la validité des paramètres (ex: identifiants entiers, date valide, prix positif). En cas de succès, il renvoie <code>res.json(donnees)</code> ou <code>res.status(201).json(...)</code>.",
+          "<strong>Rôle du modèle :</strong> Il utilise le pool <code>mysql2/promise</code> avec requêtes paramétrées <code>?</code> (ex: <code>DELETE FROM screenings WHERE sc_id = ?</code>) pour une sécurité anti-injection totale.",
+          "<strong>Codes de statut HTTP employés :</strong> 200 (OK), 201 (Créé), 401 (Non authentifié), 403 (Interdit / non admin / capacité dépassée), 404 (Ressource introuvable), 500 (Erreur serveur)."
+        ],
+        quote: "GET lit, POST crée, PATCH met à jour partiellement, DELETE supprime."
+      },
+      {
+        section: "06 · Accès",
+        title: "Authentification et autorisations",
+        lead: "Le navigateur améliore l’expérience; le backend reste la frontière de sécurité.",
+        lead: "Le client stocke le jeton; le backend reste la frontière de sécurité infranchissable.",
+        columns: 2,
+        cards: [
+          { eyebrow: "Mot de passe", title: "bcrypt", body: "Le serveur hache le mot de passe à l’inscription et compare le hachage à la connexion.", accent: "mint" },
+          { eyebrow: "Jeton", title: "JWT — une heure", body: "Après connexion, le serveur signe un jeton qui contient l’identifiant et le rôle.", accent: "popcorn" },
+          { eyebrow: "Front", title: "Bearer token", body: "Le jeton est conservé dans localStorage et ajouté aux en-têtes Axios.", accent: "raspberry" },
+          { eyebrow: "Serveur", title: "checkToken + checkAdmin", body: "Vérifie le jeton puis contrôle le rôle pour les opérations d’administration.", accent: "mint" },
+          { eyebrow: "Mot de passe", title: "bcrypt", body: "Hachage avec sel (10 tours) à l'inscription; comparaison irréversible lors du login.", accent: "mint" },
+          { eyebrow: "Jeton", title: "JWT — 1 heure", body: "Signé avec JWT_SECRET, il transporte l'identifiant, le nom, l'email et le rôle.", accent: "popcorn" },
+          { eyebrow: "Front", title: "Bearer token", body: "Stocké dans localStorage et injecté dans axios.defaults.headers.common.Authorization.", accent: "raspberry" },
+          { eyebrow: "Serveur", title: "checkToken & checkAdmin", body: "Middlewares Express vérifiant la signature du jeton puis le rôle us_role === 'admin'.", accent: "mint" },
+        ],
+        callout: "Le changement de mot de passe exige le mot de passe actuel et est refusé pour un compte admin.",
+        warning: "Le contrôle dans React seul n’est jamais suffisant : les routes Express doivent aussi vérifier le token et le rôle.",
+        callout: "Le rôle dans le front sert à adapter l'interface; la décision de sécurité est toujours ré-exécutée côté serveur.",
+        warning: "Un utilisateur modifiant son token dans le navigateur sera immédiatement rejeté par l'API car la signature cryptographique deviendra invalide.",
+        notes: [
+          "Explique la différence entre authentification et autorisation. Authentifier signifie savoir qui présente le jeton; autoriser signifie décider si cette identité peut effectuer l’action.",
+          "Le JWT est signé, pas chiffré : ses claims peuvent être lus par son détenteur. Il expire après une heure. Le middleware vérifie la signature avec JWT_SECRET avant d’attacher l’utilisateur à req.user.",
+          "bcrypt est un hachage lent et non réversible, contrairement à un chiffrement que l’on pourrait déchiffrer. Pour le changement de mot de passe, le backend recharge le hash, vérifie l’ancien, puis hache le nouveau.",
+          "Limite à reconnaître : localStorage est simple pour ce projet, mais une faille XSS pourrait exposer le jeton. Pour une production, étudier cookies HttpOnly/Secure, HTTPS et protections XSS."
+          "<strong>Authentification (qui es-tu ?) :</strong> À la connexion, <code>bcrypt.compare</code> valide le mot de passe. Le serveur génère un JWT signé avec notre clé secrète.",
+          "<strong>Autorisation (as-tu le droit ?) :</strong> Le middleware <code>checkAdmin</code> extrait <code>req.user.us_role</code> du JWT déchiffré. Si ce n'est pas 'admin', il répond directement HTTP 403.",
+          "<strong>Dans <code>authServices.js</code> :</strong> La fonction <code>isConnected()</code> lit le token dans <code>localStorage</code>, décode sa date d'expiration avec <code>jwtDecode</code> (<code>decoded.exp > Date.now()/1000</code>) et configure l'en-tête Axios par défaut.",
+          "<strong>Déconnexion propre :</strong> <code>authServices.logout()</code> retire le token de <code>localStorage</code> et supprime l'en-tête Authorization d'Axios."
+        ],
+        quote: "Le rôle transmis au front sert à l’affichage; la décision de sécurité doit être répétée côté API."
+        quote: "Le JWT est signé, pas chiffré : ses claims sont lisibles côté client, mais impossibles à falsifier sans la clé secrète du serveur."
+      },
+      {
+        section: "07 · Règles métier",
+        title: "Comment une réservation est acceptée",
+        lead: "L’utilisateur réserve une séance, pas un siège particulier.",
+        columns: 4,
+        cards: [
+          { eyebrow: "1", title: "Choisir", body: "Le film détaille les séances futures avec salle et prix.", accent: "popcorn" },
+          { eyebrow: "2", title: "Saisir", body: "Le nombre de places doit être un entier positif.", accent: "mint" },
+          { eyebrow: "3", title: "Contrôler", body: "Somme déjà réservée + demande ≤ capacité de la salle.", accent: "raspberry" },
+          { eyebrow: "4", title: "Enregistrer", body: "L’identifiant utilisateur vient du JWT; la base empêche les doublons.", accent: "popcorn" },
+          { eyebrow: "1 · Séance", title: "Choisir", body: "Séance future associée à un film, une salle et un tarif unitaire.", accent: "popcorn" },
+          { eyebrow: "2 · Quantité", title: "Saisir", body: "Le nombre de places doit être un entier positif (ex: 2).", accent: "mint" },
+          { eyebrow: "3 · Contrôle", title: "Vérifier", body: "Places déjà réservées + demande ≤ capacité de la salle.", accent: "raspberry" },
+          { eyebrow: "4 · Enregistrement", title: "Persister", body: "L'identifiant vient du JWT; la contrainte UNIQUE bloque les doublons.", accent: "popcorn" },
+        ],
+        callout: "Total affiché = nombre de places × prix de la séance. La suppression d’une réservation rend ces places disponibles à nouveau.",
+        warning: "Le calcul de capacité et l’insertion ne sont pas regroupés dans une transaction : en cas de requêtes simultanées, une amélioration serait nécessaire.",
+        callout: "Total affiché = places × tarif unitaire. En annulant sa réservation, les places redeviennent immédiatement disponibles.",
+        notes: [
+          "Présente la règle de capacité : le contrôleur récupère la capacité de la salle, additionne les places déjà réservées pour cette séance et refuse si la somme avec la nouvelle demande dépasse la capacité.",
+          "Le front calcule le prix total pour donner un retour immédiat; la valeur de référence reste le prix de séance renvoyé par le serveur.",
+          "Un index unique sur utilisateur et séance protège contre les doublons, même si plusieurs requêtes arrivent en même temps.",
+          "La limite technique importante est l’absence de transaction/verrouillage autour de la lecture des places disponibles et de l’INSERT. Deux achats simultanés pourraient tous deux passer le contrôle. Proposer une transaction ou une réservation atomique est une bonne réponse de recul."
+          "<strong>Vérification dans <code>reservations.controller.js</code> :</strong> Le contrôleur récupère la capacité de la salle (<code>room.ro_capacity</code>) et somme les places existantes (<code>reservationModel.getReservedSeats(sc_id)</code>).",
+          "<strong>Rejet si complet :</strong> Si <code>somme + places_demandees > capacite</code>, le serveur renvoie HTTP 403 avec le message : « La capacité maximale de la salle est atteinte ».",
+          "<strong>Anti-usurpation :</strong> L'ID de l'utilisateur n'est pas envoyé dans le formulaire : il est extrait directement du token JWT vérifié (<code>req.user.us_id</code>). Impossible de réserver pour un autre compte.",
+          "<strong>Calcul dynamique côté front :</strong> Dans <code>FilmDetailPage.jsx</code>, le total est calculé en direct dans le state React pour donner un feedback instantané au spectateur."
+        ],
+        quote: "L’API décide; le calcul affiché par le front n’est qu’une aide ergonomique."
+        quote: "L’API décide et fait autorité; le calcul affiché par React n’est qu’une aide ergonomique pour le visiteur."
+      },
+      {
+        section: "08 · Administration",
+        title: "AdminPage : une page, quatre sections",
+        lead: "Les onglets sont des sections conditionnelles d’un même composant React, pas des composants séparés.",
+        title: "AdminPage : gestion centralisée",
+        lead: "Un tableau de bord à onglets gérant films, séances, salles, utilisateurs et réservations.",
+        columns: 2,
+        cards: [
+          { eyebrow: "Navigation", title: "activeSection", body: "La valeur films/users/screenings/reservations sélectionne le panneau rendu.", accent: "popcorn" },
+          { eyebrow: "Chargement", title: "useEffect", body: "À chaque changement de section, le service correspondant récupère les données.", accent: "mint" },
+          { eyebrow: "Actions", title: "Handlers locaux", body: "Créer, modifier, supprimer, changer un prix ou annuler une réservation.", accent: "raspberry" },
+          { eyebrow: "Rafraîchir", title: "refreshKey", body: "Après une mutation réussie, incrémenter la clé relance le chargement courant.", accent: "popcorn" },
+          { eyebrow: "Architecture", title: "activeSection", body: "Un state local sélectionne la vue affichée (films, screenings, rooms, users, reservations).", accent: "popcorn" },
+          { eyebrow: "Séances", title: "CRUD Complet", body: "Ajout avec sélecteur de film/salle, changement de salle en ligne dans le tableau et suppression avec confirmation.", accent: "mint" },
+          { eyebrow: "Films & Salles", title: "Création et modification", body: "Formulaire d'ajout de film avec affiche locale, création de salle avec capacité et suppression.", accent: "raspberry" },
+          { eyebrow: "Rafraîchissement", title: "refreshKey", body: "Incrémenter refreshKey après chaque action relance automatiquement le useEffect pour actualiser les données.", accent: "popcorn" },
+        ],
+        callout: "Choix volontaire : respecter la demande d’un tableau de bord dans une seule page, tout en séparant visuellement les fonctionnalités.",
+        warning: "Compromis : AdminPage.jsx fait environ 690 lignes. Des composants plus petits seraient plus faciles à maintenir, mais contrediraient le choix explicite de garder les sections dans une page.",
+        callout: "CRUD séances complet : formulaire d'ajout dédié, modification de salle en direct via <select> et suppression sécurisée.",
+        notes: [
+          "Dis précisément : AdminPage est bien un composant React fonctionnel, mais les quatre panneaux ne sont pas des composants distincts. Ce sont des blocs JSX dans la même fonction.",
+          "Les boutons appellent changeSection, qui change activeSection et réinitialise les formulaires. Le rendu utilise des conditions comme activeSection === 'films' && (...). Un seul panneau de gestion apparaît à la fois.",
+          "Le useEffect choisit le bon service en fonction de la section et charge les données. Le flag isCurrent évite de mettre à jour l’état après un changement de section ou un démontage. refreshKey relance l’effet après une modification.",
+          "La page gère ses états locaux : formulaire film, image sélectionnée, séance en édition, prix, utilisateur en édition, confirmations et retours. Elle est compréhensible si l’on suit le couple section active + données correspondantes, mais sa taille augmente le coût d’évolution.",
+          "Pourquoi ne pas la découper maintenant ? Parce que le souhait précédent était explicitement de remplacer plusieurs composants admin par des sections dans une page. Un découpage futur peut extraire des hooks ou helpers sans remettre en cause l’écran unique."
+          "<strong>Gestion d'état réactive :</strong> <code>AdminPage.jsx</code> utilise <code>const [activeSection, setActiveSection] = useState('films')</code>. Le <code>useEffect</code> écoute <code>[activeSection, refreshKey]</code> pour charger les données nécessaires.",
+          "<strong>Ajout d'une séance :</strong> Formulaire au-dessus du tableau liant un film (select), une salle (select), date/heure (datetime-local) et prix, validé avec <code>screeningsServices.insert(...)</code>.",
+          "<strong>Modification de la salle :</strong> Quand on clique sur « Modifier la salle », la cellule se transforme en menu déroulant <code>&lt;select&gt;</code> permettant de changer de salle, sauvegardé avec <code>screeningsServices.update(...)</code>.",
+          "<strong>Suppression d'une séance :</strong> Bouton rouge appelant <code>handleScreeningDelete</code> avec confirmation <code>window.confirm</code> et appel <code>screeningsServices.deleteScreening(id)</code>.",
+          "<strong>Gestion des erreurs :</strong> Tous les appels sont encadrés par <code>try / catch</code> avec extraction du message d'erreur du backend via <code>getErrorMessage(error)</code>."
+        ],
+        quote: "Phrase simple : « ce n’est pas quatre applications; c’est un écran admin à état, qui remplace son contenu selon l’onglet choisi. »"
+        quote: "L'écran d'administration offre une maîtrise totale de la programmation cinéma, sans rechargement de page."
+      },
+      {
+        section: "09 · Calendrier",
+        title: "Les séances deviennent navigables",
+        lead: "FullCalendar affiche les horaires et distingue les séances des réservations du compte connecté.",
+        lead: "FullCalendar affiche l’agenda complet et identifie immédiatement les séances réservées.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Données", title: "Deux appels API", body: "Toutes les séances + les réservations du compte connecté.", accent: "mint" },
+          { eyebrow: "Adaptation", title: "Événements FullCalendar", body: "Chaque séance est convertie en event; une Map associe la réservation par identifiant de séance.", accent: "popcorn" },
+          { eyebrow: "Interaction", title: "Modal de séance", body: "Voir date, salle, prix; réserver ou annuler selon le statut et la date.", accent: "raspberry" },
+          { eyebrow: "Données", title: "Promise.all", body: "Charge en parallèle toutes les séances du cinéma et les réservations du compte connecté.", accent: "mint" },
+          { eyebrow: "Correspondance", title: "Map JavaScript", body: "Associe instantanément chaque séance à une réservation pour colorer l'événement.", accent: "popcorn" },
+          { eyebrow: "Action directe", title: "Modal interactive", body: "Clic sur un événement : affiche salle, tarif, et permet de réserver ou d'annuler sa place.", accent: "raspberry" },
+        ],
+        callout: "Vues mois, semaine et jour; libellés français; lien depuis Films et Profil (pas dans la navbar).",
+        callout: "Chargé en lazy loading (Suspense) pour préserver le temps de chargement initial de l'application.",
+        notes: [
+          "La page appelle les services des séances et des réservations en parallèle, puis crée les événements attendus par FullCalendar. Une Map rend l’association séance-réservation plus directe.",
+          "Si la séance est réservée par le compte courant, son titre et sa classe CSS sont différents. La couleur est gérée dans CalendarPage.css pour éviter des styles inline dans le JSX.",
+          "Le clic ouvre une fenêtre de détail. Une séance passée n’est pas réservable; une réservation existante peut être annulée. Après une action, refreshKey relance le chargement des événements.",
+          "La dépendance utilisée est FullCalendar v7.1.5. Le calendrier a été accessible depuis les pages Films, Profil et Réservations, selon les demandes successives; il n’est pas dans la barre de navigation."
+          "<strong>Double requête en parallèle :</strong> Dans <code>CalendarPage.jsx</code>, <code>Promise.all([screeningsServices.getAll(), reservationsServices.getMine()])</code> évite deux temps d'attente consécutifs.",
+          "<strong>Optimisation avec une Map :</strong> On indexe les réservations par <code>re_screening</code> pour une recherche en temps constant O(1) lors de la génération des événements.",
+          "<strong>Différenciation visuelle :</strong> Les séances classiques apparaissent en style cinéma sombre/jaune, tandis que les séances où l'utilisateur a un billet portent la classe CSS <code>calendar-event--reservation</code>.",
+          "<strong>Modal interactive :</strong> En cliquant sur une séance future, l'utilisateur peut réserver ses places directement depuis le calendrier sans repasser par la fiche du film."
+        ],
+        quote: "Le calendrier n’invente pas de séances : il représente les données du backend."
+        quote: "Le calendrier n’invente aucune donnée : c'est une vue visuelle et temporelle des séances de la base."
+      },
+      {
+        section: "10 · Extension hors cahier",
+        title: "Affiches stockées localement",
+        lead: "La base conserve un chemin; le serveur conserve le fichier. Aucune API d’image externe n’est appelée.",
+        lead: "La base conserve un chemin relatif; le serveur Express héberge les fichiers en local.",
+        columns: 4,
+        cards: [
+          { eyebrow: "1 · Formulaire", title: "Admin", body: "Sélection d’un JPG, PNG ou WEBP lors de l’ajout ou de la modification d’un film.", accent: "popcorn" },
+          { eyebrow: "2 · Réception", title: "Multer", body: "Champ image, un fichier, taille maximale 5 Mo; nom de fichier aléatoire.", accent: "mint" },
+          { eyebrow: "3 · Stockage", title: "back/uploads", body: "Le fichier est écrit dans uploads/films; les remplacements nettoient l’ancienne affiche.", accent: "raspberry" },
+          { eyebrow: "4 · Association", title: "fi_image", body: "MySQL stocke un chemin relatif comme films/uuid.webp; Express sert /uploads/.", accent: "popcorn" },
+          { eyebrow: "1 · Formulaire", title: "Admin", body: "Sélection d’un fichier JPG, PNG ou WEBP depuis l'ordinateur lors de la création d'un film.", accent: "popcorn" },
+          { eyebrow: "2 · Transport", title: "FormData", body: "filmsServices.create envoie un multipart/form-data avec l'image binaire et les champs texte.", accent: "mint" },
+          { eyebrow: "3 · Réception", title: "Multer", body: "Le middleware filtre les extensions, limite à 5 Mo et génère un nom de fichier unique.", accent: "raspberry" },
+          { eyebrow: "4 · Stockage", title: "uploads/films", body: "Fichier écrit sur le disque; MySQL stocke uniquement le chemin relatif dans fi_image.", accent: "popcorn" },
+        ],
+        callout: "La migration SQL rend fi_image nullable afin que les films existants continuent de fonctionner.",
+        callout: "La colonne fi_image est nullable : les films sans image continuent de fonctionner sans anomalie.",
+        notes: [
+          "Cette fonctionnalité a été ajoutée après le cahier des charges pour répondre à la demande d’utiliser des affiches depuis l’ordinateur sans service externe.",
+          "Le formulaire admin envoie un multipart/form-data. Multer vérifie le type annoncé et limite le fichier à 5 Mo; il génère un nom aléatoire avec une extension autorisée.",
+          "Le backend enregistre le chemin relatif dans fi_image et expose le dossier par express.static. Les pages Films, fiche film et Admin utilisent ce chemin pour construire l’URL de l’image.",
+          "Quand l’affiche est remplacée ou le film supprimé, le fichier précédent est nettoyé. uploads/ est ignoré par Git : il faut donc prévoir une sauvegarde séparée des images en production."
+          "<strong>Pourquoi cette extension ?</strong> Pour respecter l'interdiction d'API externe tout en affichant de véritables affiches de cinéma téléchargées depuis le poste de travail.",
+          "<strong>Côté Front (<code>filmsServices.js</code>) :</strong> On utilise l'API standard <code>new FormData()</code> qui permet de mélanger champs texte et fichier binaire.",
+          "<strong>Côté Back (<code>film-image-upload.middleware.js</code>) :</strong> Multer vérifie le type MIME, génère un nom unique avec horodatage et écrit dans <code>back/uploads/films/</code>.",
+          "<strong>Affichage web :</strong> Express expose le dossier avec <code>express.static('uploads')</code>. La fonction front <code>getFilmImageUrl</code> préfixe simplement le chemin relatif par <code>API_URL + 'uploads/'</code>."
+        ],
+        quote: "L’image n’est pas stockée comme BLOB dans MySQL : le fichier reste un fichier, et la base pointe vers lui."
+        quote: "L'image n'est pas stockée en BLOB dans la base de données : le fichier reste sur le disque et MySQL ne garde que son chemin."
+      },
+      {
+        section: "11 · Interface et code",
+        title: "Bootstrap pour la structure, CSS pour la marque",
+        lead: "La charte garde une identité cinéma tout en utilisant les composants et utilitaires Bootstrap.",
+        lead: "Une ergonomie fluide combinant les utilitaires Bootstrap 5 et une charte graphique cinéma sombre.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Socle", title: "Bootstrap 5", body: "Grilles, cartes, formulaires, tableaux, boutons, alertes et espacements.", accent: "popcorn" },
+          { eyebrow: "Identité", title: "CSS centralisé", body: "Variables nuit/aubergine/crème, popcorn, framboise et menthe; classes maison dans les CSS.", accent: "raspberry" },
+          { eyebrow: "Typographies", title: "DM Sans + Unbounded", body: "DM Sans pour le texte; Unbounded pour les titres et les éléments de marque.", accent: "mint" },
+          { eyebrow: "Grille & Layout", title: "Bootstrap 5", body: "Composants natifs : container, row, col, card, table, alert, badges et modales.", accent: "popcorn" },
+          { eyebrow: "Identité", title: "CSS centralisé", body: "Variables personnalisées : nuit (--night), aubergine, popcorn (--popcorn) et menthe (--mint).", accent: "raspberry" },
+          { eyebrow: "Typographie", title: "Polices locales", body: "DM Sans pour la lisibilité des textes; Unbounded pour les titres et la touche cinéma.", accent: "mint" },
+        ],
+        callout: "Le front suit des composants fonctionnels, useState/useEffect, services Axios séparés et listes React avec des clés stables.",
+        callout: "Formulaires contrôlés par le state React avec validation HTML5 et retours visuels immédiats.",
+        notes: [
+          "Explique que Bootstrap apporte la structure responsive et les composants usuels, tandis que index.css contient la palette et les surcharges globales. Le calendrier possède son propre CSS.",
+          "Les couleurs ont un rôle : fond sombre pour l’univers, jaune pour les actions, menthe pour le succès/disponibilité et framboise pour l’attention.",
+          "Le JavaScript React évite les styles inline personnalisés; les classes métiers sont définies dans les CSS. Les classes Bootstrap restent dans le JSX.",
+          "Le front utilise des composants fonctionnels et des hooks. Les données de formulaires vivent dans l’état, et les services Axios centralisent les URLs et méthodes HTTP."
+          "<strong>Champs contrôlés :</strong> Chaque formulaire utilise le handler standard <code>handleChange = (e) =&gt; setForm({ ...form, [e.target.name]: e.target.value })</code>. La source de vérité reste toujours le state React.",
+          "<strong>Responsive design :</strong> La grille Bootstrap adapte l'affichage des affiches et des tableaux de 1 colonne sur smartphone à 3 ou 4 colonnes sur écran large.",
+          "<strong>Séparation des styles :</strong> Bootstrap apporte les classes structurelles (ex: <code>d-flex gap-2 mb-3</code>), tandis que notre fichier <code>index.css</code> gère les surcharges de marque (palette sombre, bordures dorées)."
+        ],
+        quote: "Une règle facile à expliquer : Bootstrap pour le layout, CSS du projet pour l’identité visuelle."
+        quote: "Formule clé : Bootstrap pour la structure responsive, CSS personnalisé pour l'identité de marque."
+      },
+      {
+        section: "12 · Référence de code",
+        title: "Comparaison avec le front Events",
+        lead: "Référence consultée : github.com/TheoGeneste/events_front_aout_2026",
+        title: "Cohérence avec le repo du cours",
+        lead: "Alignement sur les techniques du projet de référence : TheoGeneste/events_front_aout_2026.",
+        columns: 2,
+        cards: [
+          { eyebrow: "Points communs", title: "Même modèle React", body: "Routes React Router, pages par écran, composants fonctionnels, hooks, formulaires contrôlés et modules de services Axios.", accent: "mint" },
+          { eyebrow: "Différences choisies", title: "Bootstrap vs MUI", body: "La référence utilise Material UI et ThemeProvider. CineHub suit la demande Bootstrap, partage l’état de session avec AuthContext et vérifie le JWT via authServices et ses wrappers.", accent: "popcorn" },
+          { eyebrow: "Style asynchrone", title: "Même syntaxe async", body: "CineHub reprend maintenant async/await et try/catch/finally dans ses appels API, comme l’exemple. Les services Axios gardent leurs méthodes dédiées.", accent: "raspberry" },
+          { eyebrow: "Admin", title: "Écran consolidé", body: "L’exemple sépare les pages métiers; CineHub garde quatre sections conditionnelles dans AdminPage, conformément au choix demandé.", accent: "mint" },
+          { eyebrow: "Auth & Contexte", title: "AuthContext & AuthWrapper", body: "Même contexte global avec isConnected et user; même wrapper conditionnel {isConnected ? children : <LoginPage />}.", accent: "mint" },
+          { eyebrow: "Gestion asynchrone", title: "async / await & try / catch", body: "Tous les formulaires et appels API utilisent async/await et capturent error.response.data.error.", accent: "popcorn" },
+          { eyebrow: "Couche Services", title: "Modules Axios dédiés", body: "Centralisation des routes dans Services/*.js avec méthodes standard : getAll, getById, insert, update, delete...", accent: "raspberry" },
+          { eyebrow: "Choix UI", title: "Bootstrap vs MUI", body: "Même logique métier et même structure d'application; adaptation de la bibliothèque graphique au thème cinéma.", accent: "mint" },
+        ],
+        callout: "Le style async/await rend les étapes successives lisibles; try/catch/finally séparent le succès, l’erreur et la remise à zéro du chargement.",
+        callout: "Même syntaxe, même gestion d'erreurs et mêmes conventions de nommage pour une explication naturelle à l'oral.",
+        notes: [
+          "Donne une comparaison factuelle. Les deux projets utilisent React Router, des composants fonctionnels, useState/useEffect et des modules de services pour l’API.",
+          "La référence est plus explicitement pédagogique : nombreux commentaires expliquant useEffect, state, Axios et les clés React. Elle utilise Material UI et un ThemeProvider avec AuthContext.",
+          "CineHub utilise Bootstrap, une palette CSS métier et AuthContext pour partager l’état de session. AuthWrapper affiche LoginPage si nécessaire; AdminRoute contrôle le rôle admin. authServices valide le JWT et configure Axios.",
+          "Comme dans l’exemple, les appels API des pages utilisent maintenant async/await avec try/catch et finally lorsque l’état de chargement doit être réinitialisé. Les deux syntaxes de promesses sont valides; ce choix vise surtout la cohérence et la lisibilité.",
+          "AdminPage est la différence la plus visible : un seul composant contient plusieurs panneaux conditionnels. C’est moins modulaire que l’exemple, mais répond au souhait d’un tableau de bord unique."
+          "<strong>Identique au cours :</strong> Le découpage en modules de services dans <code>front/src/Services/</code> isole complètement la logique réseau des composants visuels.",
+          "<strong>Pattern AuthWrapper :</strong> Notre <code>AuthWrapper.jsx</code> applique la même logique limpide que le cours : il lit <code>isConnected</code> depuis <code>AuthContext</code> et affiche la page ou <code>&lt;LoginPage /&gt;</code>.",
+          "<strong>Pattern async / await :</strong> Pas de promesses <code>.then()</code> imbriquées : on utilise <code>const response = await service(...)</code> dans un bloc <code>try / catch</code> avec extraction immédiate de <code>response.data</code>.",
+          "<strong>À valoriser devant l'évaluateur :</strong> « J'ai appliqué rigoureusement les bonnes pratiques du cours : centralisation des requêtes Axios, authentification par contexte React et gestion robuste des erreurs API. »"
+        ],
+        quote: "Ne dis pas « j’ai copié l’exemple » : dis « j’ai repris ses principes de pages, hooks et services, puis adapté la bibliothèque UI aux contraintes CineHub »."
+        quote: "« J'ai repris les principes fondamentaux de hooks, de services et de wrappers vus en cours, en adaptant l'interface aux besoins d'un cinéma. »"
+      },
+      {
+        section: "13 · Évolutions demandées ensuite",
+        title: "Au-delà du périmètre initial",
+        lead: "Plusieurs fonctions ont été ajoutées à la suite des retours et besoins exprimés pendant le projet.",
+        lead: "Des fonctionnalités ajoutées au fil du projet pour répondre à des besoins concrets.",
+        columns: 3,
+        cards: [
+          { eyebrow: "Parcours", title: "Calendrier", body: "Vue des séances et des réservations, avec accès depuis Films et Profil.", accent: "mint" },
+          { eyebrow: "Comptes", title: "Profil et mot de passe", body: "Modification des coordonnées; changement de mot de passe après vérification de l’ancien.", accent: "popcorn" },
+          { eyebrow: "Administration", title: "Plus de visibilité", body: "Profil d’utilisateur et nombre de réservations; annulation de réservations par l’admin.", accent: "raspberry" },
+          { eyebrow: "Interface", title: "Charte CineHub", body: "Couleurs, polices locales, styles CSS centralisés et dashboard admin regroupé.", accent: "popcorn" },
+          { eyebrow: "Hors cahier explicite", title: "Affiches locales", body: "Téléversement d’images depuis l’ordinateur sans API externe.", accent: "mint" },
+          { eyebrow: "Planning", title: "Calendrier interactif", body: "Vue temporelle des séances et des réservations avec FullCalendar, accessible depuis Profil et Films.", accent: "mint" },
+          { eyebrow: "Sécurité", title: "Profil & Mot de passe", body: "Modification de l'email/pseudo et changement sécurisé du mot de passe avec validation de l'ancien.", accent: "popcorn" },
+          { eyebrow: "Gestion", title: "CRUD séances & salles", body: "Création de salles, ajout de séances, réattribution de salle en ligne et suppression sécurisée.", accent: "raspberry" },
+          { eyebrow: "Médias", title: "Affiches locales", body: "Upload multipart/form-data géré par Multer sans dépendance externe.", accent: "mint" },
+          { eyebrow: "Navigation", title: "Rôles et autorisations", body: "AdminRoute pour le back-office, filtrage dynamique de la barre de navigation selon le statut connecté.", accent: "popcorn" },
+        ],
+        callout: "À l’oral, sépare clairement ce qui répond au cahier des charges et ce qui a été ajouté après.",
+        callout: "Chaque ajout répond à une amélioration de l'expérience utilisateur ou du confort d'administration.",
+        notes: [
+          "Cette partie est séparée volontairement du socle fonctionnel. Le calendrier, le profil éditable, le changement de mot de passe, la consultation du compteur admin et la charte visuelle sont des évolutions demandées au fil du projet.",
+          "La gestion des affiches locales est l’extension explicitement hors cahier : elle répond au besoin d’ajouter des images depuis l’ordinateur, sans API externe.",
+          "Présente ces ajouts comme des améliorations de parcours et d’administration, pas comme des exigences initiales si elles ne figurent pas dans le document remis."
+          "<strong>Montrer l'enrichissement du projet :</strong> Le projet ne s'arrête pas à un affichage passif : il propose un calendrier interactif, un profil éditable et une gestion d'affiches complète.",
+          "<strong>Changement de mot de passe sécurisé :</strong> La route <code>PATCH /users/me/password</code> exige le mot de passe actuel, le vérifie avec bcrypt, puis hache le nouveau mot de passe avant de l'enregistrer.",
+          "<strong>CRUD séances complet :</strong> L'administrateur peut programmer une séance dans une salle, corriger la salle d'une séance existante ou la supprimer en cascade.",
+          "<strong>Posture à l'oral :</strong> Présenter ces ajouts comme une preuve d'autonomie et d'écoute des besoins utilisateurs."
+        ],
+        quote: "La meilleure réponse à « pourquoi cette fonction ? » est de relier chaque ajout à un retour utilisateur concret."
+        quote: "Ces évolutions transforment un simple exercice scolaire en une véritable application prête à l'emploi."
+      },
+      {
+        section: "14 · Recul",
+        title: "Ce qu’il faut encore vérifier",
+        lead: "Présenter un projet terminé signifie aussi connaître ses limites et ne pas surpromettre.",
+        title: "Prise de recul technique",
+        lead: "Démontrer sa maturité de développeur en identifiant les pistes d'amélioration pour la production.",
+        columns: 2,
+        cards: [
+          { eyebrow: "Préparation", title: "Données de démonstration", body: "Le SQL de schéma ne fournit pas tout un jeu de démonstration prêt à présenter; prévoir comptes, salles, films et séances.", accent: "raspberry" },
+          { eyebrow: "Périmètre admin", title: "Salles et séances", body: "Le front Admin permet de créer des salles et de changer la salle ou le prix d’une séance. La création/suppression de séances n’est pas proposée dans l’interface.", accent: "popcorn" },
+          { eyebrow: "Écart du cahier à revalider", title: "Suppression de compte", body: "La route actuelle autorise aussi l’utilisateur à supprimer son propre compte; la revue précédente indiquait que le cahier réservait cette action à l’admin.", accent: "raspberry" },
+          { eyebrow: "Production", title: "Tests et sécurité", body: "Le back n’a pas de suite automatisée; la capacité n’est pas protégée par une transaction. localStorage et les secrets locaux ne sont pas une cible de production.", accent: "mint" },
+          { eyebrow: "Préparation", title: "Données de démo", body: "Préparer un jeu de données complet : comptes utilisateur/admin, films avec affiches, salles et séances futures.", accent: "popcorn" },
+          { eyebrow: "Périmètre admin", title: "Séances & Salles", body: "L'admin dispose du CRUD complet : ajout de séance, réattribution de salle, modification du prix et suppression avec cascade SQL.", accent: "mint" },
+          { eyebrow: "Concurrence", title: "Transactions SQL", body: "Ajouter une transaction MySQL (START TRANSACTION / FOR UPDATE) pour verrouiller la capacité lors de réservations simultanées.", accent: "raspberry" },
+          { eyebrow: "Production", title: "Sécurité & Tests", body: "Migrer le JWT vers un cookie HttpOnly contre les XSS; ajouter des tests d'intégration avec Jest/Supertest.", accent: "mint" },
+        ],
+        warning: "À dire honnêtement : lint/build et vérifications syntaxiques passent; une intégration complète sur la vraie base MySQL et la conformité finale au PDF doivent être vérifiées.",
+        warning: "À valoriser à l'oral : build Vite et ESLint passent à 100% avec zéro avertissement; connaître ses axes d'amélioration en production démontre une vraie maturité technique.",
+        notes: [
+          "Le dépôt ne contient pas le cahier original ni un README de projet complet. Le front README reste le modèle Vite. La comparaison de conformité de cette présentation s’appuie donc sur la revue précédente et l’historique des demandes, pas sur une relecture du PDF original.",
+          "La revue précédente avait relevé l’absence de données de seed, un README demandé, et un écart sur la suppression d’un utilisateur. Le code actuel autorise un utilisateur à supprimer son propre compte; vérifie si ce comportement est accepté ou à retirer.",
+          "Le panneau admin permet maintenant de créer une salle et de changer la salle ou le prix d’une séance. La création et la suppression de séances restent absentes de l’interface; vérifie si le cahier les exige.",
+          "Les validations connues sont lint/build du front et syntaxe JavaScript du back. Le script de test back est encore un placeholder; ne prétends pas avoir une couverture automatisée ni un test MySQL réel.",
+          "Autre point de recul : le contrôle de capacité lit les places puis insère sans transaction. En production, une concurrence simultanée mérite un traitement transactionnel."
+          "<strong>Honnêteté et recul technique :</strong> Les jurys apprécient les candidats qui savent parler de ce qu'ils ont fait mais aussi de ce qu'ils amélioreraient pour passer en production.",
+          "<strong>Points forts à rappeler :</strong> CRUD complet des séances fonctionnel (ajout, changement de salle, suppression en cascade), sécurité par rôle stricte côté backend, et gestion propre de l'authentification avec <code>AuthWrapper</code>.",
+          "<strong>Axe 1 (Concurrence) :</strong> En cas de très fort trafic simultané sur la dernière place d'une séance, proposer d'encapsuler la lecture de capacité et l'INSERT dans une transaction MySQL (<code>SELECT ... FOR UPDATE</code>).",
+          "<strong>Axe 2 (Sécurité) :</strong> Expliquer qu'en production, on préfèrera stocker le JWT dans un cookie <code>HttpOnly, Secure</code> pour le protéger de toute tentative de lecture JavaScript par faille XSS.",
+          "<strong>Axe 3 (Tests) :</strong> Le front est entièrement validé par le linter ESLint et le bundler Vite. En production, on ajouterait des tests d'intégration automatisés sur les routes Express avec une base MySQL de test."
+        ],
+        quote: "Si une question porte sur une limite, réponds : « voici ce qui existe, voici ce qui manque, et voici comment je le compléterais »."
+        quote: "« Voici ce qui fonctionne aujourd'hui, voici ses limites sous forte charge, et voici comment je le ferais évoluer en production. »"
+      },
+      {
+        section: "15 · Démonstration",
+        title: "Un parcours de démo en 4 minutes",
+        lead: "Montrer une histoire complète vaut mieux que parcourir tous les menus.",
+        title: "Scénario de démo en 4 minutes",
+        lead: "Une histoire utilisateur fluide montrant les fonctionnalités clés sans temps mort.",
+        columns: 4,
+        cards: [
+          { eyebrow: "1 · 30 s", title: "Connexion", body: "Entrer avec un compte utilisateur puis expliquer le rôle du token.", accent: "popcorn" },
+          { eyebrow: "2 · 70 s", title: "Films → réserver", body: "Ouvrir un film, choisir une séance et montrer le total recalculé.", accent: "mint" },
+          { eyebrow: "3 · 50 s", title: "Profil / calendrier", body: "Montrer la réservation, le compteur et la couleur dans le calendrier.", accent: "raspberry" },
+          { eyebrow: "4 · 90 s", title: "Admin", body: "Basculer sur un compte admin, modifier un prix et consulter les réservations.", accent: "popcorn" },
+          { eyebrow: "1 · 30 s", title: "Connexion", body: "Connexion spectateur; persistance du token et adaptation dynamique de la navbar.", accent: "popcorn" },
+          { eyebrow: "2 · 70 s", title: "Réservation", body: "Choix d'un film, sélection d'une séance, calcul en direct du prix total et validation.", accent: "mint" },
+          { eyebrow: "3 · 50 s", title: "Suivi & Calendrier", body: "Consultation du billet dans le profil et visualisation colorée sur le calendrier.", accent: "raspberry" },
+          { eyebrow: "4 · 90 s", title: "Administration", body: "Connexion admin : ajout d'une séance, changement de salle dans le tableau et suppression.", accent: "popcorn" },
+        ],
+        callout: "Préparer deux comptes et des séances futures; ne pas créer de données réelles improvisées pendant l’oral.",
+        callout: "Conseil pratique : préparer un onglet avec un compte spectateur et un onglet avec le compte admin pour éviter les erreurs de saisie pendant la démonstration.",
+        notes: [
+          "Avant la démo, vérifier que MySQL tourne, que le serveur back est lancé depuis son dossier, que le front répond et que les comptes de démonstration existent.",
+          "Pour illustrer une réservation, choisis une séance future avec capacité disponible, note son prix, et réserve un petit nombre de places. Montre le total calculé et retrouve ensuite la réservation.",
+          "Pour l’admin, utilise un compte admin distinct. Montre les onglets et une action non destructive si possible; une annulation ou suppression définitive doit être anticipée.",
+          "Si l’affiche est dans la démo, vérifier que le fichier est présent dans back/uploads/films et que la colonne fi_image existe dans la base.",
+          "Prévois une capture d’écran ou des réponses préparées si la connexion MySQL ou le serveur ne démarre pas le jour J."
+          "<strong>Étape 1 (30s) — Connexion :</strong> Se connecter avec un compte spectateur. Montrer que la barre de navigation passe immédiatement en mode membre via <code>AuthContext</code>.",
+          "<strong>Étape 2 (70s) — Réservation :</strong> Aller sur la page Films, ouvrir un film, choisir une séance future. Saisir le nombre de places, montrer le prix total recalculé en direct et valider.",
+          "<strong>Étape 3 (50s) — Suivi :</strong> Ouvrir la page Réservations pour montrer le billet créé, puis basculer sur le Calendrier pour montrer l'événement surligné avec sa classe CSS spécifique.",
+          "<strong>Étape 4 (90s) — Administration :</strong> Se connecter avec le compte admin et ouvrir <code>/admin</code>. Aller sur l'onglet Séances : ajouter une séance avec le formulaire, modifier la salle d'une séance existante avec le sélecteur, puis supprimer une séance.",
+          "<strong>Conclusion :</strong> « CineHub couvre tout le cycle de vie d'une programmation cinéma avec une architecture propre et sécurisée. Je suis prêt pour vos questions ! »"
+        ],
+        quote: "Termine en résumant la valeur du parcours, puis ouvre la discussion sur les améliorations futures."
+        quote: "Raconte une histoire concrète plutôt que de cliquer au hasard sur les boutons."
+      }
+    ];
+
+    const extraGuide = [
+      {
+        title: "Démarrage et vérifications avant l’oral",
+        paragraphs: [
+          "Le backend charge son .env depuis le répertoire courant. Lance-le depuis back : cd back, npm install, puis npm start. Le serveur lit DB_HOST, DB_USER, DB_PASSWORD, DB_PORT, DB_NAME, JWT_SECRET, SERVER_PORT et éventuellement FRONTEND_URL. Ne projette jamais la valeur réelle des secrets.",
+          "Dans un autre terminal, lance le front depuis front : npm install puis npm run dev. L’URL d’API du front est actuellement définie dans front/src/Services/url.js, par défaut http://127.0.0.1:3000/.",
+          "La base doit d’abord contenir le schéma et la colonne fi_image. Pour une base déjà créée, exécuter uniquement les migrations prévues en fin de back/BddCinehub.sql avec un compte ayant les droits ALTER.",
+          "Prépare des données de démonstration cohérentes. Le script SQL actuel ne fournit pas un jeu complet de films/salles/séances prêt à présenter. Inscrire un utilisateur puis lui attribuer le rôle admin en base si nécessaire.",
+          "Vérifie une séance future, sa capacité, son prix, les identifiants de deux comptes et le chemin d’une affiche. Garde un scénario de secours sans démo live."
+          "Le backend charge son .env depuis son répertoire. Lance-le depuis back : cd back, npm install, puis npm start. Le serveur lit DB_HOST, DB_USER, DB_PASSWORD, DB_PORT, DB_NAME, JWT_SECRET, SERVER_PORT et éventuellement FRONTEND_URL. Ne projette jamais la valeur réelle des secrets.",
+          "Dans un autre terminal, lance le front depuis front : cd front, npm install puis npm run dev. L’URL d’API du front est centralisée dans front/src/Services/url.js (http://127.0.0.1:3000/).",
+          "La base de données MySQL doit contenir le schéma initial et la colonne fi_image. Tout est défini dans back/BddCinehub.sql.",
+          "Prépare un jeu de données de test propre : 2 comptes (1 spectateur + 1 admin avec us_role = 'admin' en base), 2 ou 3 films avec affiches, au moins 2 salles et des séances programmées dans le futur."
+        ]
+      },
+      {
+        title: "Repères de code pour expliquer le front",
+        paragraphs: [
+          "front/src/main.jsx monte React dans #root, importe Bootstrap, les polices locales et le CSS global, puis affiche App.",
+          "front/src/App.jsx centralise BrowserRouter et les routes. Les pages principales sont HomePage, LoginPage, RegisterPage, FilmsPage, FilmDetailPage, ReservationsPage, ProfilePage, AdminPage et CalendarPage.",
+          "front/src/Contexts/AuthContext.jsx partage l’utilisateur et l’état de connexion entre App, les pages et les wrappers. AuthWrapper exige un JWT valide et affiche LoginPage si nécessaire; AdminRoute ajoute le contrôle de rôle côté interface. Le serveur a ses propres middlewares d’authentification et d’administration.",
+          "front/src/Services contient les fonctions Axios par ressource. Un composant garde surtout l’état de son écran, appelle un service, puis traduit la réponse en affichage.",
+          "Un state React (useState) est une donnée d’interface qui déclenche un nouveau rendu. useEffect synchronise l’écran avec le réseau quand le composant ou ses paramètres changent. map transforme les données en éléments visuels; key aide React à suivre les éléments."
+          "front/src/main.jsx : Point d'entrée montant l'application React dans #root avec les imports de Bootstrap et du CSS global.",
+          "front/src/App.jsx : Centralise BrowserRouter, initialise isConnected via authServices.isConnected() et fournit AuthContext.Provider à toute l'application.",
+          "front/src/Contexts/AuthContext.jsx : Contexte partagé exportant isConnected, setIsConnected, user et setUser.",
+          "front/src/Wrappers/AuthWrapper.jsx : Lit isConnected dans AuthContext et affiche les enfants (children) ou renvoie vers LoginPage.",
+          "front/src/Wrappers/AdminRoute.jsx : Vérifie isConnected puis contrôle que user.us_role === 'admin' avant d'afficher la page d'administration.",
+          "front/src/Services/ : Modules Axios dédiés (filmsServices, screeningsServices, roomsServices, reservationsServices, usersServices, authServices) qui isolent les URLs et les méthodes HTTP.",
+          "front/src/Pages/AdminPage.jsx : Tableau de bord complet gérant films, salles, séances (création, réattribution de salle, tarif, suppression) et utilisateurs."
+        ]
+      },
+      {
+        title: "Repères de code pour expliquer le backend",
+        paragraphs: [
+          "back/index.js configure Express, CORS et JSON, rend les images accessibles sur /uploads, puis monte les routeurs. Les groupes métier sont auth, users, films, rooms, screenings et reservations.",
+          "Une route protège l’action avec checkToken et, selon l’opération, checkAdmin. Le middleware admin lit req.user.us_role après vérification du JWT.",
+          "Le contrôleur est la frontière HTTP : il valide les entrées, appelle un ou plusieurs modèles et renvoie le bon code HTTP/JSON. Le modèle utilise mysql2/promise et des paramètres ? pour les valeurs SQL.",
+          "Les mots de passe sont hashés par bcrypt. Les réservations viennent de l’utilisateur du JWT, pas d’un user_id fourni dans le formulaire; cela évite qu’un utilisateur choisisse l’identité d’un autre.",
+          "Les erreurs métier renvoient un champ error. Les statuts utiles à citer sont 401 pour l’absence d’authentification, 403 pour l’action refusée, 404 pour l’objet absent, 201 pour une création réussie et 500 pour une erreur serveur."
+          "back/index.js : Configure Express, les middlewares CORS et express.json(), sert le dossier uploads/ en statique, et monte les routeurs d'API.",
+          "back/Routes/ : Fichiers de routage associant les verbes HTTP (GET, POST, PATCH, DELETE) aux middlewares de sécurité (checkToken, checkAdmin) et aux contrôleurs.",
+          "back/Controllers/ : Valide les paramètres reçus (req.body, req.params), appelle les modèles SQL, et renvoie le statut HTTP avec du JSON.",
+          "back/Models/ : Effectue les requêtes SQL préparées (?) avec mysql2/promise pour éliminer les risques d'injection SQL.",
+          "Sécurité des accès : Les mots de passe sont hachés avec bcrypt (10 rounds). Les réservations utilisent l'identifiant extrait du token JWT (req.user.us_id), empêchant toute usurpation."
+        ]
+      },
+      {
+        title: "Carte rapide des routes API",
+        table: [
+          ["Groupe", "Routes principales", "Usage"],
+          ["auth", "POST /auth/register · POST /auth/login", "Créer un compte et recevoir un JWT"],
+          ["users", "GET /users/me · PATCH /users/:id · PATCH /users/me/password · DELETE /users/:id", "Profil, mot de passe et administration des comptes"],
+          ["films", "GET /films/showing · GET /films/:id · POST/PATCH/DELETE /films", "Catalogue et CRUD admin"],
+          ["rooms", "GET /rooms · GET /rooms/:id · POST/PATCH/DELETE /rooms", "Salles; écritures réservées à l’admin"],
+          ["screenings", "GET /screenings · GET /screenings/film/:filmID · POST/PATCH/DELETE", "Programmation et prix"],
+          ["reservations", "GET /reservations/me · POST /reservations · DELETE /reservations/:id", "Parcours spectateur; listes globales réservées à l’admin"]
+          ["auth", "POST /auth/register · POST /auth/login", "Inscription et connexion (génération du token JWT)"],
+          ["users", "GET /users/me · PATCH /users/:id · PATCH /users/me/password · DELETE /users/:id", "Profil, changement de mot de passe et gestion des comptes"],
+          ["films", "GET /films/showing · GET /films/:id · POST/PATCH/DELETE /films", "Catalogue de films et gestion admin (avec affiches)"],
+          ["rooms", "GET /rooms · POST /rooms", "Salles et capacités d'accueil"],
+          ["screenings", "GET /screenings · GET /screenings/film/:id · POST · PATCH /:id · DELETE /:id", "Séances : ajout, modification de salle/prix et suppression"],
+          ["reservations", "GET /reservations/me · POST /reservations · DELETE /reservations/:id", "Réservations de places avec contrôle de capacité"]
+        ],
+        paragraphs: [
+          "Les méthodes HTTP indiquent l’intention : GET lire, POST créer, PATCH modifier, DELETE supprimer. Les chemins exacts sont ceux de back/Routes; consulte le routeur si une question porte sur une variante."
+          "Les verbes HTTP définissent l'intention : GET (lecture), POST (création), PATCH (mise à jour partielle), DELETE (suppression)."
+        ]
+      },
+      {
+        title: "Questions probables — produit et données",
+        qa: [
+          ["Pourquoi séparer film et séance ?", "Un film décrit l’œuvre; une séance représente une projection datée, dans une salle et avec un prix. Un film peut donc avoir plusieurs projections."],
+          ["Comment empêcher une surréservation ?", "L’API compare les places déjà réservées et la capacité de la salle avant l’insertion. Le schéma empêche aussi une double réservation du même utilisateur pour la même séance. Pour une forte concurrence, il faudrait rendre ce contrôle atomique avec une transaction."],
+          ["Peut-on choisir un siège ?", "Non. La réservation stocke une quantité de places, pas les numéros de sièges. Un plan de salle serait une extension avec des sièges et des réservations unitaires."],
+          ["Le paiement est-il inclus ?", "Non. Le projet enregistre des réservations et calcule le total; il ne traite pas de paiement."],
+          ["Pourquoi des clés étrangères en cascade ?", "Pour que les données dépendantes ne deviennent pas orphelines lors de suppressions métier prévues. Cette décision est destructive pour les éléments dépendants et doit être expliquée à l’admin."]
+          ["Pourquoi séparer film et séance ?", "Un film décrit l'œuvre artistique (titre, synopsis, durée, affiche). Une séance représente une projection datée dans une salle précise avec un tarif donné. Un même film peut donc avoir plusieurs séances à des horaires et tarifs variés."],
+          ["Comment empêcher une surréservation ?", "Dans reservations.controller.js, le backend interroge la capacité maximale de la salle et additionne les places déjà vendues. Si places_déjà_réservées + nouvelles_places > capacité, la requête est rejetée avec une erreur 403. La contrainte UNIQUE (re_user, re_screening) empêche également les doublons."],
+          ["Pourquoi des clés étrangères en cascade (ON DELETE CASCADE) ?", "Pour préserver l'intégrité relationnelle de la base MySQL. Si un film ou une séance est supprimé, MySQL efface automatiquement les réservations associées sans laisser d'enregistrements orphelins."]
+        ]
+      },
+      {
+        title: "Questions probables — sécurité",
+        qa: [
+          ["Le rôle dans le front protège-t-il la route ?", "Non, pas à lui seul. Le wrapper améliore la navigation; le backend revalide le JWT et le rôle avant chaque opération sensible."],
+          ["Le JWT est-il chiffré ?", "Il est signé, pas chiffré. On peut lire ses claims; la signature sert à détecter une modification et sa durée limite la fenêtre d’utilisation."],
+          ["Pourquoi bcrypt ?", "Il produit un hachage lent et salé adapté aux mots de passe. Le serveur compare le mot de passe saisi avec le hash, il ne déchiffre pas le hash."],
+          ["Les requêtes SQL sont-elles protégées ?", "Les valeurs sont passées dans les paramètres ? de mysql2, séparément de la requête. Il faut continuer à éviter de concaténer directement des entrées utilisateur dans SQL."],
+          ["Quelles améliorations avant une vraie mise en production ?", "HTTPS, secrets robustes et hors dépôt, validation complète, protection contre les XSS, cookies HttpOnly/Secure à étudier, limitations de débit, audit des accès utilisateur, transactions de capacité, sauvegardes des images et tests intégrés."]
+        ]
+      },
+      {
+        title: "Questions probables — React et architecture",
+        qa: [
+          ["Pourquoi utiliser useState ?", "Pour stocker des valeurs d’interface — formulaire, liste, chargement, erreur — et redessiner le composant quand elles changent."],
+          ["À quoi sert useEffect ici ?", "À charger les données quand l’écran est monté ou quand la section/identifiant change; il évite de faire l’appel réseau pendant le rendu."],
+          ["Pourquoi un service Axios séparé ?", "Pour regrouper les URL et méthodes HTTP par ressource; les pages décrivent l’interface et délèguent la communication."],
+          ["Pourquoi AdminPage est-elle si longue ?", "Le choix demandé était une seule page d’administration avec des sections. activeSection choisit une section et des blocs conditionnels les affichent. C’est fonctionnel mais moins modulaire; une évolution peut extraire des helpers ou composants si le choix de conception change."],
+          ["Pourquoi async/await ?", "Les deux formes de gestion des promesses sont valides. CineHub utilise async/await pour reprendre le style de l’exemple; try/catch/finally rendent explicites la réussite, l’erreur et la fin du chargement."]
+          ["Comment fonctionne AuthWrapper ?", "AuthWrapper utilise useContext(AuthContext) pour lire l'état isConnected. C'est une condition ternaire limpide : isConnected ? children : <LoginPage />. Si l'utilisateur est connecté, la page demandée s'affiche; sinon, le formulaire de connexion est présenté."],
+          ["Comment fonctionne AdminRoute ?", "AdminRoute vérifie d'abord isConnected (sinon LoginPage), puis vérifie si user.us_role === 'admin'. Si ce n'est pas le cas, il redirige immédiatement vers l'accueil via <Navigate to='/' replace />."],
+          ["Pourquoi séparer les appels dans des modules Services ?", "Pour respecter la séparation des responsabilités. Les composants React s'occupent uniquement de l'interface et du rendu; les modules de services Axios (ex: screeningsServices.js) centralisent les URLs et les verbes HTTP."],
+          ["Comment est gérée la modification de salle pour une séance ?", "Dans AdminPage.jsx, chaque ligne de séance possède un bouton 'Modifier la salle' qui active un <select> listant toutes les salles. Au clic sur 'Enregistrer', un appel PATCH est envoyé à screeningsServices.update(id, { room, price }), puis refreshKey est incrémenté pour recharger les données."],
+          ["Pourquoi async/await et try/catch plutôt que des promesses .then() ?", "Pour une meilleure lisibilité du code linéaire. try/catch sépare nettement le scénario de succès (traitement de response.data) du scénario d'erreur (extraction de error.response.data.error)."]
+        ]
+      },
+      {
+        title: "Questions probables — images, calendrier et qualité",
+        title: "Questions probables — sécurité et qualité",
+        qa: [
+          ["Où sont stockées les affiches ?", "Dans back/uploads/films. La base garde le chemin relatif dans fi_image; Express sert le dossier via /uploads."],
+          ["Que se passe-t-il si le fichier n’existe plus ?", "Le chemin reste en base mais l’image ne pourra pas être servie. Il faut sauvegarder ensemble la base et le dossier uploads; une suppression de ligne DB seule ne sauvegarde pas le fichier."],
+          ["Pourquoi FullCalendar ?", "La demande était une interface calendrier dédiée; FullCalendar fournit les vues mois/semaine/jour, les événements et les interactions sans écrire un calendrier de zéro."],
+          ["Quelles validations ont été faites ?", "Le lint et le build front, les vérifications de syntaxe JavaScript back et le contrôle de diff. Il n’existe pas de suite de tests back complète et la connexion réelle à MySQL n’a pas été vérifiée dans cette validation."],
+          ["Le projet est-il conforme à 100 % ?", "Ne réponds pas oui sans vérifier le cahier original. La revue antérieure a relevé l’absence de données de démonstration, un README de projet à compléter et une divergence sur la suppression de compte. Confirme si la création/suppression de séances est exigée côté interface."]
+          ["Le rôle dans le front protège-t-il réellement les données ?", "Non, le contrôle dans le front (AdminRoute) sert uniquement à améliorer l'ergonomie et l'expérience utilisateur. La véritable sécurité est assurée côté serveur par les middlewares checkToken et checkAdmin qui revalident la signature du JWT avant chaque opération."],
+          ["Pourquoi utiliser bcrypt plutôt qu'un chiffrement classique ?", "bcrypt est un algorithme de hachage unidirectionnel et ralenti avec sel. On ne peut pas 'déchiffrer' un mot de passe haché : le serveur compare simplement l'empreinte saisie avec l'empreinte stockée via bcrypt.compare."],
+          ["Le code a-t-il été validé techniquement ?", "Oui, le projet front compile avec Vite (npm run build) et respecte l'ensemble des règles ESLint avec zéro erreur ni avertissement. Côté back, toutes les requêtes SQL sont paramétrées avec des marqueurs ?."]
+        ]
+      },
+      {
+        title: "Améliorations futures à proposer",
+        title: "Améliorations futures à proposer pour la production",
+        paragraphs: [
+          "1. Compléter le README avec les prérequis, variables d’environnement, installation, lancement, migrations et comptes de démonstration.",
+          "2. Ajouter un seed de développement propre et sûr : salles, films, séances futures et consignes de promotion d’un admin; ne pas livrer de mot de passe réel.",
+          "3. Ajouter tests unitaires des règles métier et tests d’intégration de routes avec une base de test.",
+          "4. Protéger la vérification de capacité dans une transaction pour éviter les courses concurrentes.",
+          "5. Revoir la politique de suppression de compte et restreindre GET /users/:id au propriétaire ou à l’admin.",
+          "6. Clarifier le périmètre admin des salles et séances; gérer les fichiers d’affiche en sauvegarde et éventuellement stocker les images sur un volume dédié.",
+          "7. Externaliser l’URL de l’API côté front et préparer une configuration de production."
+          "1. Transactions SQL : Encapsuler la vérification de capacité et la création de réservation dans une transaction avec SELECT ... FOR UPDATE pour gérer les fortes concurrences.",
+          "2. Cookies HttpOnly : Stocker le token JWT dans un cookie HttpOnly et Secure plutôt que dans localStorage pour éliminer les risques d'exfiltration par faille XSS.",
+          "3. Modularité du front : Découper AdminPage.jsx en sous-composants dédiés (AdminFilms, AdminScreenings, AdminRooms) pour faciliter le travail en équipe.",
+          "4. Tests automatisés : Ajouter des tests d'intégration avec Jest et Supertest sur les routes Express les plus critiques."
+        ]
+      },
+      {
+        title: "Phrase de conclusion",
+        paragraphs: [
+          "« CineHub couvre un parcours complet de consultation et de réservation, avec une API séparée, une base relationnelle, des droits par rôle et un écran d’administration. Les demandes supplémentaires ont fait évoluer le produit avec un calendrier, la gestion du profil et les affiches locales. J’ai aussi identifié les prochaines améliorations : tests intégrés, transaction de capacité, documentation et données de démonstration. »"
+          "« CineHub couvre l'ensemble du cycle de vie d'un cinéma : consultation, réservation sécurisée et administration complète avec programmation des séances et des salles. L'application respecte les bonnes pratiques du cours avec une architecture MVC côté serveur et des modules de services avec contexte React côté client. Je suis maintenant à votre disposition pour répondre à vos questions. »"
+        ]
+      }
+    ];
+
+    const deck = document.getElementById("deck");
+    const liveNotes = document.getElementById("liveNotes");
+    const guide = document.getElementById("guide");
+    const slideCount = document.getElementById("slideCount");
+    let activeIndex = 0;
+    let currentMode = "presentation";
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderSlide(slide, index) {
+      const title = slide.titleHtml ? slide.title : escapeHTML(slide.title);
+      const cards = slide.cards.map((card) => `
+        <article class="card" style="--card-accent: var(--${card.accent || "popcorn"})">
+          <div class="card__eyebrow">${escapeHTML(card.eyebrow)}</div>
+          <h3>${escapeHTML(card.title)}</h3>
+          <p>${escapeHTML(card.body)}</p>
+        </article>`).join("");
+      const callout = slide.callout
+        ? `<div class="callout">${escapeHTML(slide.callout)}</div>`
+        : "";
+      const warning = slide.warning
+        ? `<div class="callout callout--warning">${escapeHTML(slide.warning)}</div>`
+        : "";
+
+      return `
+        <article class="slide${index === 0 ? " is-active" : ""}${index === 0 ? " slide--title" : ""}"
+          data-index="${index}" aria-label="Diapositive ${index + 1} : ${escapeHTML(slide.title.replace(/<[^>]*>/g, ""))}">
+          <div class="slide__top">
+            <span class="slide__section">${escapeHTML(slide.section)}</span>
+            <span class="slide__number">${String(index + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}</span>
+          </div>
+          <div class="slide__body">
+            <h1>${title}</h1>
+            <p class="slide__lead">${escapeHTML(slide.lead)}</p>
+            <div class="card-grid" style="--columns:${slide.columns || 2}">
+              ${cards}
+            </div>
+            ${callout}
+            ${warning}
+          </div>
+          <div class="slide__bottom">
+            <span>CINEHUB · Présentation du projet</span>
+            <span>Front React · API Express · MySQL</span>
+          </div>
+        </article>`;
+    }
+
+    function renderGuidePage(item, index) {
+      const paragraphs = (item.paragraphs || [])
+        .map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join("");
+      const qa = (item.qa || []).map(([question, answer]) => `
+        <p><strong>${escapeHTML(question)}</strong><br>${escapeHTML(answer)}</p>`).join("");
+      const table = item.table
+        ? `<div class="guide__table-wrap"><table>${item.table.map((row, rowIndex) => `
+            <tr>${row.map((cell) => rowIndex === 0
+          ? `<th>${escapeHTML(cell)}</th>`
+          : `<td>${escapeHTML(cell)}</td>`).join("")}</tr>`).join("")}</table></div>`
+        : "";
+      return `
+        <section class="guide-page">
+          <div class="guide__tag">Guide oral · ${String(index + 1).padStart(2, "0")}</div>
+          <h2>${escapeHTML(item.title)}</h2>
+          ${paragraphs}${table}${qa}
+        </section>`;
+    }
+
+    function render() {
+      deck.innerHTML = slides.map(renderSlide).join("");
+      guide.innerHTML = `
+        <section class="guide__intro">
+          <div class="guide__tag">Document présentatrice · version détaillée</div>
+          <h1>CineHub — Guide de soutenance</h1>
+          <p>Les diapositives sont volontairement synthétiques. Cette vue contient le discours, les explications techniques, les limites à reconnaître et des réponses possibles aux questions.</p>
+          <p><strong>Clavier :</strong> ← / → pour naviguer, Espace pour avancer, N pour les notes, G pour le guide, P pour imprimer.</p>
+        </section>
+        ${slides.map((slide, index) => `
+          <section class="guide-page">
+            <div class="guide__tag">Diapositive ${String(index + 1).padStart(2, "0")} · ${escapeHTML(slide.section)}</div>
+            <h2>${escapeHTML(slide.title.replace(/<[^>]*>/g, ""))}</h2>
+            ${slide.notes.map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join("")}
+            ${slide.notes.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+            <div class="guide__quote">${escapeHTML(slide.quote)}</div>
+          </section>`).join("")}
+        ${extraGuide.map(renderGuidePage).join("")}
+        <section class="guide-page">
+          <div class="guide__tag">Ressource comparée</div>
+          <h2>Front de référence</h2>
+          <p><a href="https://github.com/TheoGeneste/events_front_aout_2026" style="color:var(--popcorn)">TheoGeneste/events_front_aout_2026</a> — branche main consultée le 20 novembre 2026.</p>
+          <p>Fichiers regardés pour la comparaison : App.jsx, main.jsx, EventsPage.jsx, LoginPage.jsx, AuthWrapper.jsx et eventsServices.js.</p>
+          <p>Cette comparaison porte uniquement sur le front, conformément à la demande. Elle ne prétend pas être une revue complète du backend de ce dépôt exemple.</p>
+        </section>`;
+      showSlide(0);
+      const params = new URLSearchParams(location.search);
+      if (params.get("pdf") === "slides") {
+        setMode("print-slides");
+      } else if (params.get("pdf") === "guide") {
+        setMode("print-guide");
+      } else if (params.get("view") === "guide") {
+        setMode("guide");
+      }
+    }
+
+    function showSlide(index) {
+      activeIndex = (index + slides.length) % slides.length;
+      deck.querySelectorAll(".slide").forEach((slide, slideIndex) => {
+        slide.classList.toggle("is-active", slideIndex === activeIndex);
+      });
+      liveNotes.innerHTML = `
+        <h2>Notes · ${String(activeIndex + 1).padStart(2, "0")} / ${slides.length}</h2>
+        ${slides[activeIndex].notes.map((paragraph) => `<p>${escapeHTML(paragraph)}</p>`).join("")}
+        ${slides[activeIndex].notes.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+        <div class="guide__quote">${escapeHTML(slides[activeIndex].quote)}</div>`;
+      slideCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+      document.getElementById("previousSlide").disabled = activeIndex === 0;
+      document.getElementById("nextSlide").disabled = activeIndex === slides.length - 1;
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.body.className = `mode-${mode}`;
+      document.getElementById("modePresentation").setAttribute("aria-pressed", String(mode === "presentation"));
+      document.getElementById("modeSpeaker").setAttribute("aria-pressed", String(mode === "speaker"));
+      document.getElementById("modeGuide").setAttribute("aria-pressed", String(mode === "guide"));
+    }
+
+    document.getElementById("previousSlide").addEventListener("click", () => showSlide(activeIndex - 1));
+    document.getElementById("nextSlide").addEventListener("click", () => showSlide(activeIndex + 1));
+    document.getElementById("modePresentation").addEventListener("click", () => setMode("presentation"));
+    document.getElementById("modeSpeaker").addEventListener("click", () => setMode("speaker"));
+    document.getElementById("modeGuide").addEventListener("click", () => setMode("guide"));
+    document.getElementById("printCurrent").addEventListener("click", () => window.print());
+    document.addEventListener("keydown", (event) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+      if (event.key === "ArrowRight" || event.key === " ") showSlide(activeIndex + 1);
+      if (event.key === "ArrowLeft") showSlide(activeIndex - 1);
+      if (event.key.toLowerCase() === "n") setMode(currentMode === "speaker" ? "presentation" : "speaker");
+      if (event.key.toLowerCase() === "g") setMode(currentMode === "guide" ? "presentation" : "guide");
+      if (event.key.toLowerCase() === "p") window.print();
+    });
+
+    render();
+  </script>
+</body>
+
+</html>

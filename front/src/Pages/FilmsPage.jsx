@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import Header from '../Components/Header.jsx'
-import filmsServices from '../Services/filmsServices.js'
+import filmsServices, { getFilmImageUrl } from '../Services/filmsServices.js'
 
 function FilmsPage() {
   const [films, setFilms] = useState([])
@@ -9,16 +9,32 @@ function FilmsPage() {
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
-    filmsServices.getShowing()
-      .then((response) => {
+    let isCurrent = true
+
+    async function loadFilms() {
+      try {
+        const response = await filmsServices.getShowing()
+        if (!isCurrent) {
+          return
+        }
         setFilms(response.data)
-        setIsLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
+        if (!isCurrent) {
+          return
+        }
         const message = error.response && error.response.data && error.response.data.error
         setErrorMessage(message || "Impossible de récupérer les films à l'affiche.")
-        setIsLoading(false)
-      })
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadFilms()
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   return (
@@ -50,9 +66,18 @@ function FilmsPage() {
           <div className="list-group film-list">
             {films.map((film) => (
               <div className="list-group-item film-list__item d-flex flex-wrap align-items-center justify-content-between gap-3" key={film.fi_id}>
-                <div>
-                  <h2 className="h5 mb-1">{film.fi_title}</h2>
-                  <p className="mb-0 text-muted">{film.fi_genre || 'Genre non renseigné'}</p>
+                <div className="d-flex align-items-center gap-3">
+                  {film.fi_image && (
+                    <img
+                      className="film-list__poster"
+                      src={getFilmImageUrl(film.fi_image)}
+                      alt={'Affiche de ' + film.fi_title}
+                    />
+                  )}
+                  <div>
+                    <h2 className="h5 mb-1">{film.fi_title}</h2>
+                    <p className="mb-0 text-muted">{film.fi_genre || 'Genre non renseigné'}</p>
+                  </div>
                 </div>
                 <Link className="btn btn-primary" to={'/films/' + film.fi_id}>
                   Détails

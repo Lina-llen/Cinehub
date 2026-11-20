@@ -340,6 +340,42 @@ header {
   border-left-color: var(--cinehub-popcorn) !important;
 }
 
+.film-list__poster,
+.film-admin-thumbnail,
+.film-admin-preview,
+.film-detail__poster {
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--cinehub-border);
+  background-color: var(--cinehub-night);
+}
+
+.film-list__poster {
+  width: 4rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 0.5rem;
+}
+
+.film-admin-thumbnail {
+  width: 2.5rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 0.35rem;
+}
+
+.film-admin-preview {
+  width: 5rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 0.5rem;
+}
+
+.film-detail__poster {
+  width: 100%;
+  max-width: 22rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
+}
+
 .screening-list__item {
   border-radius: 0.85rem !important;
   border-left: 4px solid var(--cinehub-mint) !important;

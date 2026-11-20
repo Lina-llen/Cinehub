@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import Header from '../Components/Header.jsx'
+import AuthContext from '../Contexts/AuthContext.jsx'
 import authServices from '../Services/authServices.js'
 
 function LoginPage() {
   const [user, setUser] = useState({ username: '', password: '' })
   const [errorMessage, setErrorMessage] = useState('')
+  const { setIsConnected, setUser: setAuthUser } = useContext(AuthContext)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -13,21 +15,23 @@ function LoginPage() {
     setUser({ ...user, [event.target.name]: event.target.value })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
     setErrorMessage('')
 
-    authServices.login(user)
-      .then(() => {
-        const destination = location.state && location.state.from
-          ? location.state.from.pathname
-          : '/'
-        navigate(destination)
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setErrorMessage(message || 'Impossible de se connecter. Vérifiez le serveur et réessayez.')
-      })
+    try {
+      await authServices.login(user)
+      setAuthUser(authServices.getUser())
+      setIsConnected(true)
+      const requestedPath = location.state && location.state.from
+        ? location.state.from.pathname
+        : location.pathname
+      const destination = requestedPath === '/connexion' ? '/' : requestedPath
+      navigate(destination)
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setErrorMessage(message || 'Impossible de se connecter. Vérifiez le serveur et réessayez.')
+    }
   }
 
   return (

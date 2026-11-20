@@ -9,6 +9,7 @@ import filmsRoutes from './Routes/films.route.js';
 import roomsRoutes from './Routes/rooms.route.js';
 import screeningsRoutes from './Routes/screenings.route.js';
 import reservationsRoutes from './Routes/reservations.route.js';
+import { fileURLToPath } from 'node:url';
 
 
 dotenv.config();
@@ -16,6 +17,7 @@ dotenv.config();
 const app = express();
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
 app.use(express.json());
+app.use('/uploads', express.static(fileURLToPath(new URL('./uploads/', import.meta.url))));
 
 //ROUTES//
 app.use("/auth", authRoutes);

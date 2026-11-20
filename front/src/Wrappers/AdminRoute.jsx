@@ -1,19 +1,20 @@
-import { Navigate, useLocation } from 'react-router'
-import authServices from '../Services/authServices.js'
+import { useContext } from 'react';
+import { Navigate } from 'react-router';
+import AuthContext from '../Contexts/AuthContext';
+import LoginPage from '../Pages/LoginPage';
 
-function AdminRoute({ children }) {
-  const user = authServices.getUser()
-  const location = useLocation()
+const AdminRoute = ({ children }) => {
+  const { isConnected, user } = useContext(AuthContext);
 
-  if (!user) {
-    return <Navigate to="/connexion" replace state={{ from: location }} />
+  if (!isConnected) {
+    return <LoginPage />;
   }
 
-  if (user.us_role !== 'admin') {
-    return <Navigate to="/" replace />
+  if (!user || user.us_role !== 'admin') {
+    return <Navigate to="/" replace />;
   }
 
-  return children
-}
+  return children;
+};
 
-export default AdminRoute
+export default AdminRoute;

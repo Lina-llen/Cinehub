@@ -25,5 +25,7 @@ export default {
   getAll,
   getMine,
   create,
+  insert: create,
   cancel,
+  deleteReservation: cancel,
 }

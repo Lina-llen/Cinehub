@@ -31,5 +31,7 @@ export default {
   getAll,
   update,
   changeMyPassword,
+  resetPassword: changeMyPassword,
   remove,
+  deleteUser: remove,
 }

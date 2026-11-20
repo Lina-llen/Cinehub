@@ -1,9 +1,10 @@
+import { useContext } from 'react'
 import { Link } from 'react-router'
 import Header from '../Components/Header.jsx'
-import authServices from '../Services/authServices.js'
+import AuthContext from '../Contexts/AuthContext.jsx'
 
 function HomePage() {
-  const isConnected = authServices.isConnected()
+  const { isConnected } = useContext(AuthContext)
 
   return (
     <div>

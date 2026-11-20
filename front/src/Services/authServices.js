@@ -3,13 +3,12 @@ import { jwtDecode } from 'jwt-decode'
 import { API_URL } from './url.js'
 
 // LOGIN
-function login(user) {
-  return axios.post(API_URL + 'auth/login', user).then((response) => {
-    const token = response.data.token
-    window.localStorage.setItem('token', token)
-    axios.defaults.headers.common.Authorization = 'Bearer ' + token
-    return response
-  })
+async function login(user) {
+  const response = await axios.post(API_URL + 'auth/login', user)
+  const token = response.data.token
+  window.localStorage.setItem('token', token)
+  axios.defaults.headers.common.Authorization = 'Bearer ' + token
+  return response
 }
 
 // REGISTER

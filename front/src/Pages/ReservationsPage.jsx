@@ -20,34 +20,50 @@ function ReservationsPage() {
   const [cancellingReservationId, setCancellingReservationId] = useState(null)
 
   useEffect(() => {
-    reservationsServices.getMine()
-      .then((response) => {
+    let isCurrent = true
+
+    async function loadReservations() {
+      try {
+        const response = await reservationsServices.getMine()
+        if (!isCurrent) {
+          return
+        }
         setReservations(response.data)
-        setIsLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
+        if (!isCurrent) {
+          return
+        }
         const message = error.response && error.response.data && error.response.data.error
         setErrorMessage(message || 'Impossible de récupérer vos réservations.')
-        setIsLoading(false)
-      })
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadReservations()
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
-  function handleCancel(reservation) {
+  async function handleCancel(reservation) {
     if (!window.confirm('Annuler votre réservation pour « ' + reservation.fi_title + ' » ?')) {
       return
     }
 
     setErrorMessage('')
     setCancellingReservationId(reservation.re_id)
-    reservationsServices.cancel(reservation.re_id)
-      .then(() => {
-        setReservations((current) => current.filter((item) => item.re_id !== reservation.re_id))
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setErrorMessage(message || 'Impossible d’annuler cette réservation.')
-      })
-      .finally(() => setCancellingReservationId(null))
+    try {
+      await reservationsServices.cancel(reservation.re_id)
+      setReservations((current) => current.filter((item) => item.re_id !== reservation.re_id))
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setErrorMessage(message || 'Impossible d’annuler cette réservation.')
+    } finally {
+      setCancellingReservationId(null)
+    }
   }
 
   return (

@@ -1,5 +1,6 @@
 //IMPORTS//
 import filmModel from '../Models/films.model.js';
+import reservationModel from '../Models/reservations.model.js';
 import roomModel from '../Models/rooms.model.js';
 import screeningModel from '../Models/screenings.model.js';
 
@@ -95,6 +96,13 @@ async function update(req, res) {
         const room = await roomModel.getById(roomId);
         if (!film || !room) {
             return res.status(404).json({ error: "Le film ou la salle n'existe pas" });
+        }
+
+        if (roomId !== Number(currentScreening.sc_room)) {
+            const reservedSeats = Number(await reservationModel.getReservedSeats(id));
+            if (reservedSeats > Number(room.ro_capacity)) {
+                return res.status(409).json({ error: "La capacité de cette salle est inférieure au nombre de places déjà réservées" });
+            }
         }
 
         const result = await screeningModel.update(id, {

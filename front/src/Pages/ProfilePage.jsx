@@ -21,48 +21,75 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    usersServices.getMe()
-      .then((response) => {
+    let isCurrent = true
+
+    async function loadProfile() {
+      try {
+        const response = await usersServices.getMe()
+        if (!isCurrent) {
+          return
+        }
         setUser(response.data)
         setProfileForm({ username: response.data.us_username, email: response.data.us_email })
-        setIsLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
+        if (!isCurrent) {
+          return
+        }
         const message = error.response && error.response.data && error.response.data.error
         setErrorMessage(message || 'Impossible de récupérer votre profil.')
-        setIsLoading(false)
-      })
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }
 
-    reservationsServices.getMine()
-      .then((response) => setReservationCount(response.data.length))
-      .catch(() => setReservationError('Impossible de récupérer le nombre de réservations.'))
+    async function loadReservationCount() {
+      try {
+        const response = await reservationsServices.getMine()
+        if (isCurrent) {
+          setReservationCount(response.data.length)
+        }
+      } catch {
+        if (isCurrent) {
+          setReservationError('Impossible de récupérer le nombre de réservations.')
+        }
+      }
+    }
+
+    loadProfile()
+    loadReservationCount()
+
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   function handleProfileChange(event) {
     setProfileForm({ ...profileForm, [event.target.name]: event.target.value })
   }
 
-  function handleProfileSubmit(event) {
+  async function handleProfileSubmit(event) {
     event.preventDefault()
     setProfileErrorMessage('')
     setProfileSuccessMessage('')
     setIsSavingProfile(true)
 
-    usersServices.update(user.us_id, profileForm)
-      .then((response) => {
-        setUser(response.data.user)
-        setProfileForm({
-          username: response.data.user.us_username,
-          email: response.data.user.us_email,
-        })
-        setIsEditingProfile(false)
-        setProfileSuccessMessage('Votre profil a été mis à jour.')
+    try {
+      const response = await usersServices.update(user.us_id, profileForm)
+      setUser(response.data.user)
+      setProfileForm({
+        username: response.data.user.us_username,
+        email: response.data.user.us_email,
       })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setProfileErrorMessage(message || 'Impossible de modifier votre profil.')
-      })
-      .finally(() => setIsSavingProfile(false))
+      setIsEditingProfile(false)
+      setProfileSuccessMessage('Votre profil a été mis à jour.')
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setProfileErrorMessage(message || 'Impossible de modifier votre profil.')
+    } finally {
+      setIsSavingProfile(false)
+    }
   }
 
   function cancelProfileEdit() {
@@ -78,7 +105,7 @@ function ProfilePage() {
     setPasswordForm({ ...passwordForm, [event.target.name]: event.target.value })
   }
 
-  function handlePasswordSubmit(event) {
+  async function handlePasswordSubmit(event) {
     event.preventDefault()
     setPasswordErrorMessage('')
     setPasswordSuccessMessage('')
@@ -89,19 +116,19 @@ function ProfilePage() {
     }
 
     setIsSavingPassword(true)
-    usersServices.changeMyPassword({
-      currentPassword: passwordForm.currentPassword,
-      newPassword: passwordForm.newPassword,
-    })
-      .then(() => {
-        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
-        setPasswordSuccessMessage('Votre mot de passe a été modifié.')
+    try {
+      await usersServices.changeMyPassword({
+        currentPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword,
       })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setPasswordErrorMessage(message || 'Impossible de modifier votre mot de passe.')
-      })
-      .finally(() => setIsSavingPassword(false))
+      setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+      setPasswordSuccessMessage('Votre mot de passe a été modifié.')
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setPasswordErrorMessage(message || 'Impossible de modifier votre mot de passe.')
+    } finally {
+      setIsSavingPassword(false)
+    }
   }
 
   return (

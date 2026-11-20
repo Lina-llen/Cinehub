@@ -36,8 +36,12 @@ function CalendarPage() {
   useEffect(() => {
     let isCurrent = true
 
-    Promise.all([screeningsServices.getAll(), reservationsServices.getMine()])
-      .then(([screeningsResponse, reservationsResponse]) => {
+    async function loadCalendar() {
+      try {
+        const [screeningsResponse, reservationsResponse] = await Promise.all([
+          screeningsServices.getAll(),
+          reservationsServices.getMine(),
+        ])
         if (!isCurrent) {
           return
         }
@@ -57,19 +61,20 @@ function CalendarPage() {
         })
 
         setEvents(calendarEvents)
-      })
-      .catch((error) => {
+      } catch (error) {
         if (!isCurrent) {
           return
         }
         const message = error.response && error.response.data && error.response.data.error
         setErrorMessage(message || 'Impossible de charger le calendrier.')
-      })
-      .finally(() => {
+      } finally {
         if (isCurrent) {
           setIsLoading(false)
         }
-      })
+      }
+    }
+
+    loadCalendar()
 
     return () => {
       isCurrent = false
@@ -88,25 +93,25 @@ function CalendarPage() {
     setRefreshKey((current) => current + 1)
   }
 
-  function handleReservation() {
+  async function handleReservation() {
     const screening = selectedEvent.extendedProps.screening
     setErrorMessage('')
     setIsSubmitting(true)
 
-    reservationsServices.create(screening.sc_id, Number(seats))
-      .then(() => {
-        setSelectedEvent(null)
-        setNotice('Votre réservation a bien été enregistrée.')
-        refreshEvents()
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setErrorMessage(message || 'Impossible de réserver cette séance.')
-      })
-      .finally(() => setIsSubmitting(false))
+    try {
+      await reservationsServices.create(screening.sc_id, Number(seats))
+      setSelectedEvent(null)
+      setNotice('Votre réservation a bien été enregistrée.')
+      refreshEvents()
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setErrorMessage(message || 'Impossible de réserver cette séance.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  function handleCancelReservation() {
+  async function handleCancelReservation() {
     const reservation = selectedEvent.extendedProps.reservation
     if (!window.confirm('Annuler votre réservation pour « ' + selectedScreening.fi_title + ' » ?')) {
       return
@@ -115,17 +120,17 @@ function CalendarPage() {
     setErrorMessage('')
     setIsSubmitting(true)
 
-    reservationsServices.cancel(reservation.re_id)
-      .then(() => {
-        setSelectedEvent(null)
-        setNotice('Votre réservation a été annulée.')
-        refreshEvents()
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setErrorMessage(message || 'Impossible d’annuler cette réservation.')
-      })
-      .finally(() => setIsSubmitting(false))
+    try {
+      await reservationsServices.cancel(reservation.re_id)
+      setSelectedEvent(null)
+      setNotice('Votre réservation a été annulée.')
+      refreshEvents()
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setErrorMessage(message || 'Impossible d’annuler cette réservation.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const selectedScreening = selectedEvent && selectedEvent.extendedProps.screening

@@ -1,12 +1,16 @@
+import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router'
+import AuthContext from '../Contexts/AuthContext.jsx'
 import authServices from '../Services/authServices.js'
 
 function Header() {
-  const user = authServices.getUser()
+  const { isConnected, setIsConnected, setUser, user } = useContext(AuthContext)
   const navigate = useNavigate()
 
   function handleLogout() {
     authServices.logout()
+    setIsConnected(false)
+    setUser(null)
     navigate('/')
   }
 
@@ -20,12 +24,12 @@ function Header() {
         </Link>
 
         <div className="ms-auto d-flex gap-2">
-          {user ? (
+          {isConnected ? (
             <>
               <Link className="btn btn-link" to="/films">
                 Films
               </Link>
-              {user.us_role === 'admin' && (
+              {user && user.us_role === 'admin' && (
                 <Link className="btn btn-link" to="/admin">
                   Administration
                 </Link>

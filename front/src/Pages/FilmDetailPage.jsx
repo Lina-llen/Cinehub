@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Header from '../Components/Header.jsx'
-import filmsServices from '../Services/filmsServices.js'
+import filmsServices, { getFilmImageUrl } from '../Services/filmsServices.js'
 import reservationsServices from '../Services/reservationsServices.js'
 
 function formatDate(value) {
@@ -26,16 +26,32 @@ function FilmDetailPage() {
   const [isBooking, setIsBooking] = useState(false)
 
   useEffect(() => {
-    filmsServices.getById(id)
-      .then((response) => {
+    let isCurrent = true
+
+    async function loadFilm() {
+      try {
+        const response = await filmsServices.getById(id)
+        if (!isCurrent) {
+          return
+        }
         setFilm(response.data)
-        setIsLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
+        if (!isCurrent) {
+          return
+        }
         const message = error.response && error.response.data && error.response.data.error
         setErrorMessage(message || 'Impossible de récupérer ce film.')
-        setIsLoading(false)
-      })
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadFilm()
+    return () => {
+      isCurrent = false
+    }
   }, [id])
 
   useEffect(() => {
@@ -65,22 +81,21 @@ function FilmDetailPage() {
     setSuccessMessage('')
   }
 
-  function handleReservation(event) {
+  async function handleReservation(event) {
     event.preventDefault()
     setBookingError('')
     setIsBooking(true)
 
-    reservationsServices.create(selectedScreening.sc_id, Number(seats))
-      .then(() => {
-        setSuccessMessage('Votre réservation a bien été enregistrée.')
-        setSelectedScreening(null)
-        setIsBooking(false)
-      })
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setBookingError(message || "Impossible d'effectuer la réservation.")
-        setIsBooking(false)
-      })
+    try {
+      await reservationsServices.create(selectedScreening.sc_id, Number(seats))
+      setSuccessMessage('Votre réservation a bien été enregistrée.')
+      setSelectedScreening(null)
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setBookingError(message || "Impossible d'effectuer la réservation.")
+    } finally {
+      setIsBooking(false)
+    }
   }
 
   const totalPrice = selectedScreening
@@ -111,10 +126,23 @@ function FilmDetailPage() {
         {film && (
           <>
             <section className="mb-5">
-              <h1 className="display-5 fw-bold">{film.fi_title}</h1>
-              {film.fi_genre && <p className="text-muted">{film.fi_genre}</p>}
-              {film.fi_description && <p className="lead">{film.fi_description}</p>}
-              <p><strong>Durée :</strong> {film.fi_duration} minutes</p>
+              <div className="row g-4 align-items-start">
+                {film.fi_image && (
+                  <div className="col-md-4 col-lg-3">
+                    <img
+                      className="film-detail__poster"
+                      src={getFilmImageUrl(film.fi_image)}
+                      alt={'Affiche de ' + film.fi_title}
+                    />
+                  </div>
+                )}
+                <div className={film.fi_image ? 'col-md-8 col-lg-9' : 'col-12'}>
+                  <h1 className="display-5 fw-bold">{film.fi_title}</h1>
+                  {film.fi_genre && <p className="text-muted">{film.fi_genre}</p>}
+                  {film.fi_description && <p className="lead">{film.fi_description}</p>}
+                  <p><strong>Durée :</strong> {film.fi_duration} minutes</p>
+                </div>
+              </div>
             </section>
 
             <section>

@@ -12,18 +12,19 @@ function RegisterPage() {
     setUser({ ...user, [event.target.name]: event.target.value })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
     setErrorMessage('')
 
-    authServices.register(user)
-      .then(() => navigate('/connexion', {
+    try {
+      await authServices.register(user)
+      navigate('/connexion', {
         state: { message: 'Votre compte a bien été créé. Vous pouvez vous connecter.' },
-      }))
-      .catch((error) => {
-        const message = error.response && error.response.data && error.response.data.error
-        setErrorMessage(message || 'Impossible de créer le compte. Vérifiez le serveur et réessayez.')
       })
+    } catch (error) {
+      const message = error.response && error.response.data && error.response.data.error
+      setErrorMessage(message || 'Impossible de créer le compte. Vérifiez le serveur et réessayez.')
+    }
   }
 
   return (
