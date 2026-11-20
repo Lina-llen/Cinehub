@@ -124,9 +124,9 @@ function FilmDetailPage() {
                   Aucune séance à venir pour ce film.
                 </div>
               ) : (
-                <div className="list-group">
+                <div className="list-group screening-list">
                   {film.screenings.map((screening) => (
-                    <div className="list-group-item" key={screening.sc_id}>
+                    <div className="list-group-item screening-list__item" key={screening.sc_id}>
                       <div className="row align-items-center g-2">
                         <div className="col-md-5">
                           <strong>{formatDate(screening.sc_datetime)}</strong>
@@ -134,7 +134,7 @@ function FilmDetailPage() {
                         <div className="col-md-4">
                           Salle : {screening.ro_name}
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-3 screening-list__price">
                           Prix : {Number(screening.sc_price).toFixed(2)} €
                         </div>
                         <div className="col-12">

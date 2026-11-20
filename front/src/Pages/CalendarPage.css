@@ -1,0 +1,174 @@
+.calendar-page .calendar-widget {
+  --fc-classic-button: var(--cinehub-popcorn);
+  --fc-classic-button-border: var(--cinehub-popcorn);
+  --fc-classic-button-strong: #eab42c;
+  --fc-classic-button-strong-border: #eab42c;
+  --fc-classic-button-outline: rgba(255, 198, 51, 0.45);
+  --fc-classic-button-foreground: var(--cinehub-night);
+  --fc-classic-primary: var(--cinehub-mint);
+  --fc-classic-primary-foreground: var(--cinehub-night);
+  --fc-classic-event: var(--cinehub-mint);
+  --fc-classic-event-contrast: var(--cinehub-night);
+  --fc-classic-background-event: var(--cinehub-popcorn);
+  --fc-classic-background-event-opacity: 16%;
+  --fc-classic-background-event-foreground-opacity: 80%;
+  --fc-classic-highlight: rgba(255, 198, 51, 0.14);
+  --fc-classic-today: rgba(255, 198, 51, 0.1);
+  --fc-classic-now: var(--cinehub-raspberry);
+  --fc-classic-background: var(--cinehub-night);
+  --fc-classic-faint: rgba(255, 244, 220, 0.025);
+  --fc-classic-muted: rgba(255, 244, 220, 0.06);
+  --fc-classic-strong: rgba(255, 244, 220, 0.1);
+  --fc-classic-foreground: var(--cinehub-cream);
+  --fc-classic-faint-foreground: var(--cinehub-muted);
+  --fc-classic-muted-foreground: var(--cinehub-muted);
+  --fc-classic-border: var(--cinehub-border);
+  --fc-classic-strong-border: rgba(255, 244, 220, 0.3);
+  color: var(--cinehub-cream);
+}
+
+.calendar-board {
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  background-color: var(--cinehub-aubergine);
+  border: 1px solid var(--cinehub-border);
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.calendar-widget h2 {
+  color: var(--cinehub-cream);
+  font-family: 'Unbounded', system-ui, sans-serif;
+  font-size: clamp(1rem, 3vw, 1.45rem);
+  font-weight: 800;
+}
+
+.calendar-widget [role="grid"] {
+  overflow: hidden;
+  background-color: var(--cinehub-night);
+  border: 1px solid var(--cinehub-border);
+  border-radius: 0.65rem;
+}
+
+.calendar-widget [role="columnheader"] {
+  color: var(--cinehub-popcorn);
+  background-color: var(--cinehub-aubergine);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.calendar-widget [role="gridcell"] {
+  color: var(--cinehub-cream);
+  background-color: var(--cinehub-night);
+  border-color: var(--cinehub-border);
+}
+
+.calendar-widget [role="tablist"] {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  background-color: var(--cinehub-night);
+  border: 1px solid var(--cinehub-border);
+  border-radius: 0.65rem;
+}
+
+.calendar-widget [role="tab"] {
+  padding: 0.45rem 0.7rem;
+  color: var(--cinehub-cream);
+  background-color: transparent;
+  border: 0;
+  border-radius: 0.45rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.calendar-widget [role="tab"][aria-selected="true"] {
+  color: var(--cinehub-night);
+  background-color: var(--cinehub-popcorn);
+}
+
+.calendar-widget button {
+  padding: 0.5rem 0.75rem;
+  color: var(--cinehub-night);
+  background-color: var(--cinehub-popcorn);
+  border: 1px solid var(--cinehub-popcorn);
+  border-radius: 0.55rem;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 700;
+}
+
+.calendar-widget button:hover:not(:disabled) {
+  color: var(--cinehub-night);
+  background-color: #eab42c;
+  border-color: #eab42c;
+}
+
+.calendar-widget button:focus-visible {
+  outline: 2px solid var(--cinehub-popcorn);
+  outline-offset: 2px;
+}
+
+.calendar-widget button:disabled {
+  opacity: 0.55;
+}
+
+.calendar-widget .calendar-event--screening {
+  --fc-event-color: var(--cinehub-mint);
+  --fc-event-contrast-color: var(--cinehub-night);
+}
+
+.calendar-widget .calendar-event--reservation {
+  --fc-event-color: var(--cinehub-popcorn);
+  --fc-event-contrast-color: var(--cinehub-night);
+}
+
+.calendar-widget [role="button"].calendar-event--screening {
+  color: var(--cinehub-night);
+  background-color: var(--cinehub-mint);
+  border-color: var(--cinehub-mint);
+}
+
+.calendar-widget [role="button"].calendar-event--reservation {
+  color: var(--cinehub-night);
+  background-color: var(--cinehub-popcorn);
+  border-color: var(--cinehub-popcorn);
+}
+
+.calendar-legend {
+  color: var(--cinehub-cream);
+}
+
+.calendar-legend__swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  vertical-align: -0.05rem;
+}
+
+.calendar-legend__swatch--screening {
+  background-color: var(--cinehub-mint);
+}
+
+.calendar-legend__swatch--reservation {
+  background-color: var(--cinehub-popcorn);
+}
+
+@media (max-width: 575.98px) {
+  .calendar-board {
+    padding: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .calendar-widget [role="tablist"] {
+    gap: 0;
+  }
+
+  .calendar-widget [role="tab"] {
+    padding-inline: 0.45rem;
+    font-size: 0.75rem;
+  }
+}

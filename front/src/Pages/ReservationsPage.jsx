@@ -73,9 +73,9 @@ function ReservationsPage() {
         )}
 
         {!errorMessage && reservations.length > 0 && (
-          <div className="list-group">
+          <div className="list-group reservation-list">
             {reservations.map((reservation) => (
-              <article className="list-group-item" key={reservation.re_id}>
+              <article className="list-group-item reservation-ticket" key={reservation.re_id}>
                 <div className="d-flex flex-wrap justify-content-between gap-2 mb-3">
                   <h2 className="h5 mb-0">{reservation.fi_title}</h2>
                   <span className="text-muted">Réservation #{reservation.re_id}</span>

@@ -1,5 +1,13 @@
 # React + Vite
 
+## CineHub visual identity
+
+The interface follows the CineHub palette: Nuit `#190F33`, Aubergine `#2B1B55`,
+Crème `#FFF4DC`, Popcorn `#FFC633`, Framboise `#FF3E7F`, and Menthe `#35E0B5`.
+Global Bootstrap overrides and the locally bundled DM Sans and Unbounded fonts
+are configured in `src/index.css` and `src/main.jsx`. Calendar-specific styling
+is kept in `src/Pages/CalendarPage.css`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

@@ -250,10 +250,10 @@ function ProfilePage() {
             </section>
 
             <section className="col-lg-5">
-              <div className="card h-100">
+              <div className="card h-100 profile-stat-card">
                 <div className="card-body">
                   <h2 className="h4 mb-3">Mes réservations</h2>
-                  <p className="display-4 fw-bold mb-3">{reservationCount}</p>
+                  <p className="display-4 fw-bold profile-stat-card__count mb-3">{reservationCount}</p>
                   {reservationError && <p className="text-danger">{reservationError}</p>}
                   <Link className="btn btn-primary me-2" to="/reservations">
                     Consulter mes réservations

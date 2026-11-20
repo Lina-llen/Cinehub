@@ -13,8 +13,10 @@ function Header() {
   return (
     <header className="border-bottom">
       <nav className="navbar container py-3">
-        <Link className="navbar-brand fw-bold" to="/">
-          ▶ CineHub
+      <Link className="navbar-brand brand-mark" to="/" aria-label="CineHub - Accueil">
+        <span className="brand-mark__frame" aria-hidden="true"></span>
+        <span>CINE<span className="brand-mark__accent">HUB</span></span>
+        <span className="brand-mark__rec" aria-hidden="true"></span>
         </Link>
 
         <div className="ms-auto d-flex gap-2">

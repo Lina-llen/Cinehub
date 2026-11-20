@@ -47,9 +47,9 @@ function FilmsPage() {
         )}
 
         {!errorMessage && films.length > 0 && (
-          <div className="list-group">
+          <div className="list-group film-list">
             {films.map((film) => (
-              <div className="list-group-item d-flex flex-wrap align-items-center justify-content-between gap-3" key={film.fi_id}>
+              <div className="list-group-item film-list__item d-flex flex-wrap align-items-center justify-content-between gap-3" key={film.fi_id}>
                 <div>
                   <h2 className="h5 mb-1">{film.fi_title}</h2>
                   <p className="mb-0 text-muted">{film.fi_genre || 'Genre non renseigné'}</p>

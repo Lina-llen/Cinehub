@@ -8,6 +8,7 @@ import frLocale from '@fullcalendar/react/locales/fr'
 import '@fullcalendar/react/skeleton.css'
 import '@fullcalendar/react/themes/classic/theme.css'
 import '@fullcalendar/react/themes/classic/palette.css'
+import './CalendarPage.css'
 import Header from '../Components/Header.jsx'
 import reservationsServices from '../Services/reservationsServices.js'
 import screeningsServices from '../Services/screeningsServices.js'
@@ -50,7 +51,7 @@ function CalendarPage() {
             id: 'screening-' + screening.sc_id,
             title: reservation ? 'Ma réservation · ' + screening.fi_title : screening.fi_title,
             start: screening.sc_datetime,
-            color: reservation ? '#6f42c1' : '#0d6efd',
+            className: reservation ? 'calendar-event--reservation' : 'calendar-event--screening',
             extendedProps: { screening, reservation },
           }
         })
@@ -135,7 +136,7 @@ function CalendarPage() {
   return (
     <div>
       <Header />
-      <main className="container py-5">
+      <main className="container py-5 calendar-page">
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
           <div>
             <h1 className="display-5 fw-bold mb-2">Calendrier des séances</h1>
@@ -150,38 +151,41 @@ function CalendarPage() {
 
         {!isLoading && !errorMessage && (
           <>
-            <div className="d-flex flex-wrap gap-3 mb-3" aria-label="Légende du calendrier">
+            <div className="d-flex flex-wrap gap-3 mb-3 calendar-legend" aria-label="Légende du calendrier">
               <span>
-                <span className="d-inline-block rounded-circle me-2" aria-hidden="true" style={{ width: '0.75rem', height: '0.75rem', backgroundColor: '#0d6efd' }} />
+                <span className="calendar-legend__swatch calendar-legend__swatch--screening" aria-hidden="true" />
                 Séance
               </span>
               <span>
-                <span className="d-inline-block rounded-circle me-2" aria-hidden="true" style={{ width: '0.75rem', height: '0.75rem', backgroundColor: '#6f42c1' }} />
+                <span className="calendar-legend__swatch calendar-legend__swatch--reservation" aria-hidden="true" />
                 Ma réservation
               </span>
             </div>
-            <FullCalendar
-              plugins={[dayGridPlugin, timeGridPlugin, classicThemePlugin]}
-              initialView="dayGridMonth"
-              locale={frLocale}
-              events={events}
-              eventClick={openEvent}
-              headerToolbar={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay',
-              }}
-              buttons={{
-                today: { text: 'Aujourd’hui' },
-                dayGridMonth: { text: 'Mois' },
-                timeGridWeek: { text: 'Semaine' },
-                timeGridDay: { text: 'Jour' },
-              }}
-              eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
-              dayMaxEvents
-              height="auto"
-              eventDisplay="block"
-            />
+            <div className="calendar-board">
+              <FullCalendar
+                plugins={[dayGridPlugin, timeGridPlugin, classicThemePlugin]}
+                className="calendar-widget"
+                initialView="dayGridMonth"
+                locale={frLocale}
+                events={events}
+                eventClick={openEvent}
+                headerToolbar={{
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                }}
+                buttons={{
+                  today: { text: 'Aujourd’hui' },
+                  dayGridMonth: { text: 'Mois' },
+                  timeGridWeek: { text: 'Semaine' },
+                  timeGridDay: { text: 'Jour' },
+                }}
+                eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
+                dayMaxEvents
+                height="auto"
+                eventDisplay="block"
+              />
+            </div>
           </>
         )}
       </main>

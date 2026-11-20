@@ -11,8 +11,8 @@ function HomePage() {
 
       <main className="container py-5">
         <div className="row align-items-center g-4">
-          <section className="col-lg-7">
-            <p className="text-uppercase text-secondary small fw-semibold">Le cinéma, à votre rythme</p>
+          <section className="col-lg-7 home-hero">
+            <p className="text-uppercase text-secondary small fw-semibold home-hero__eyebrow">Le cinéma, à votre rythme</p>
             <h1 className="display-3 fw-bold">
               La prochaine séance commence ici.
             </h1>
@@ -39,7 +39,7 @@ function HomePage() {
           </section>
 
           <aside className="col-lg-5" aria-label="Bienvenue chez CineHub">
-            <div className="card">
+            <div className="card home-feature-card">
               <div className="card-body p-4">
                 <h2 className="h5 card-title">Bienvenue chez CineHub</h2>
                 <p className="card-text text-secondary">

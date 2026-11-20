@@ -32,7 +32,7 @@ function RegisterPage() {
       <main className="container py-5">
         <div className="row justify-content-center">
           <div className="col-md-8 col-lg-6 col-xl-5">
-            <div className="card">
+            <div className="card auth-card">
               <div className="card-body p-4">
                 <h1 className="h2">Inscription</h1>
                 <p className="text-secondary">Créez votre compte pour préparer votre prochaine séance.</p>
