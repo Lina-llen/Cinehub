@@ -16,7 +16,12 @@ async function getByUsername(username) {
 
 // GET ALL //
 async function getAll() {
-    const [rows] = await Db.query("SELECT us_id, us_username, us_email, us_role FROM users");
+    const [rows] = await Db.query(`
+        SELECT users.us_id, users.us_username, users.us_email, users.us_role,
+               (SELECT COUNT(*) FROM reservations WHERE reservations.re_user = users.us_id) AS reservation_count
+        FROM users
+        ORDER BY users.us_id
+    `);
     return rows;
 }
 
@@ -50,6 +55,16 @@ async function getMe(id) {
     return rows[0];
 }
 
+async function getPasswordRecord(id) {
+    const [rows] = await Db.query("SELECT us_password, us_role FROM users WHERE us_id = ?", [id]);
+    return rows[0];
+}
+
+async function updatePassword(id, passwordHash) {
+    const [updated] = await Db.query("UPDATE users SET us_password = ? WHERE us_id = ?", [passwordHash, id]);
+    return updated;
+}
+
 
 //EXPORTS//
 export default {
@@ -59,5 +74,7 @@ export default {
     getById,
     deleteUser,
     update,
-    getMe
+    getMe,
+    getPasswordRecord,
+    updatePassword
 }

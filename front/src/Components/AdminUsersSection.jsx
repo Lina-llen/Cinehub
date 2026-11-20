@@ -4,6 +4,7 @@ import usersServices from '../Services/usersServices.js'
 function AdminUsersSection() {
   const [users, setUsers] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
+  const [viewingUser, setViewingUser] = useState(null)
   const [user, setUser] = useState({ username: '', email: '' })
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
@@ -84,6 +85,26 @@ function AdminUsersSection() {
       {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
       {successMessage && <div className="alert alert-success" role="status">{successMessage}</div>}
 
+      {viewingUser && (
+        <div className="card mb-4">
+          <div className="card-body">
+            <div className="d-flex justify-content-between align-items-start gap-3">
+              <div>
+                <h3 className="h5">Profil de {viewingUser.us_username}</h3>
+                <p className="mb-1"><strong>E-mail :</strong> {viewingUser.us_email}</p>
+                <p className="mb-1"><strong>Rôle :</strong> {viewingUser.us_role}</p>
+                <p className="mb-0">
+                  <strong>Réservations :</strong> {Number(viewingUser.reservation_count) || 0}
+                </p>
+              </div>
+              <button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => setViewingUser(null)}>
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {selectedUser && (
         <div className="card mb-4">
           <div className="card-body">
@@ -118,6 +139,7 @@ function AdminUsersSection() {
                 <th scope="col">Nom d’utilisateur</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Rôle</th>
+                <th scope="col">Réservations</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
@@ -127,8 +149,12 @@ function AdminUsersSection() {
                   <td>{item.us_username}</td>
                   <td>{item.us_email}</td>
                   <td>{item.us_role}</td>
+                  <td>{Number(item.reservation_count) || 0}</td>
                   <td>
                     <div className="d-flex gap-2">
+                      <button className="btn btn-sm btn-outline-secondary" type="button" onClick={() => setViewingUser(item)}>
+                        Profil
+                      </button>
                       <button className="btn btn-sm btn-outline-primary" type="button" onClick={() => startEditing(item)}>
                         Modifier
                       </button>

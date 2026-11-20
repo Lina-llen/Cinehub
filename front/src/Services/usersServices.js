@@ -16,6 +16,11 @@ function update(id, user) {
   return axios.patch(API_URL + 'users/' + id, user)
 }
 
+// CHANGE OWN PASSWORD
+function changeMyPassword(passwords) {
+  return axios.patch(API_URL + 'users/me/password', passwords)
+}
+
 // DELETE
 function remove(id) {
   return axios.delete(API_URL + 'users/' + id)
@@ -25,5 +30,6 @@ export default {
   getMe,
   getAll,
   update,
+  changeMyPassword,
   remove,
 }

@@ -15,6 +15,8 @@ function AdminReservationsSection() {
   const [reservations, setReservations] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [cancellingReservationId, setCancellingReservationId] = useState(null)
 
   useEffect(() => {
     reservationsServices.getAll()
@@ -29,11 +31,32 @@ function AdminReservationsSection() {
       })
   }, [])
 
+  function handleCancel(reservation) {
+    if (!window.confirm('Annuler la réservation de ' + reservation.us_username + ' pour « ' + reservation.fi_title + ' » ?')) {
+      return
+    }
+
+    setErrorMessage('')
+    setSuccessMessage('')
+    setCancellingReservationId(reservation.re_id)
+    reservationsServices.cancel(reservation.re_id)
+      .then(() => {
+        setReservations((current) => current.filter((item) => item.re_id !== reservation.re_id))
+        setSuccessMessage('Réservation annulée.')
+      })
+      .catch((error) => {
+        const message = error.response && error.response.data && error.response.data.error
+        setErrorMessage(message || 'Impossible d’annuler cette réservation.')
+      })
+      .finally(() => setCancellingReservationId(null))
+  }
+
   return (
     <section>
       <h2 className="h3 mb-4">Toutes les réservations</h2>
 
       {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+      {successMessage && <div className="alert alert-success" role="status">{successMessage}</div>}
       {isLoading && <p className="text-muted">Chargement des réservations...</p>}
       {!isLoading && !errorMessage && reservations.length === 0 && (
         <div className="alert alert-info" role="status">Aucune réservation pour le moment.</div>
@@ -50,6 +73,7 @@ function AdminReservationsSection() {
                 <th scope="col">Salle</th>
                 <th scope="col">Places</th>
                 <th scope="col">Total</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -61,6 +85,16 @@ function AdminReservationsSection() {
                   <td>{reservation.ro_name}</td>
                   <td>{reservation.re_seats}</td>
                   <td>{(Number(reservation.sc_price) * Number(reservation.re_seats)).toFixed(2)} €</td>
+                  <td>
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      type="button"
+                      disabled={cancellingReservationId === reservation.re_id}
+                      onClick={() => handleCancel(reservation)}
+                    >
+                      {cancellingReservationId === reservation.re_id ? 'Annulation...' : 'Annuler'}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

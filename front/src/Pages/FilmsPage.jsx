@@ -25,7 +25,12 @@ function FilmsPage() {
     <div>
       <Header />
       <main className="container py-5">
-        <h1 className="display-5 fw-bold mb-4">Films à l’affiche</h1>
+        <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+          <h1 className="display-5 fw-bold mb-0">Films à l’affiche</h1>
+          <Link className="btn btn-outline-primary" to="/calendrier">
+            Voir le calendrier des séances
+          </Link>
+        </div>
 
         {isLoading && <p className="text-muted">Chargement des films...</p>}
 

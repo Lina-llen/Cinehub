@@ -9,6 +9,8 @@ router.get("/", checkAdmin, userController.getAll);
 
 router.get("/me", userController.getMe);
 
+router.patch("/me/password", userController.changeMyPassword);
+
 router.get("/:id", userController.getById);
 
 router.patch("/:id", userController.update);

@@ -17,6 +17,7 @@ function ReservationsPage() {
   const [reservations, setReservations] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [cancellingReservationId, setCancellingReservationId] = useState(null)
 
   useEffect(() => {
     reservationsServices.getMine()
@@ -31,12 +32,31 @@ function ReservationsPage() {
       })
   }, [])
 
+  function handleCancel(reservation) {
+    if (!window.confirm('Annuler votre réservation pour « ' + reservation.fi_title + ' » ?')) {
+      return
+    }
+
+    setErrorMessage('')
+    setCancellingReservationId(reservation.re_id)
+    reservationsServices.cancel(reservation.re_id)
+      .then(() => {
+        setReservations((current) => current.filter((item) => item.re_id !== reservation.re_id))
+      })
+      .catch((error) => {
+        const message = error.response && error.response.data && error.response.data.error
+        setErrorMessage(message || 'Impossible d’annuler cette réservation.')
+      })
+      .finally(() => setCancellingReservationId(null))
+  }
+
   return (
     <div>
       <Header />
       <main className="container py-5">
         <p><Link to="/profil">Retour au profil</Link></p>
         <h1 className="display-5 fw-bold mb-4">Mes réservations</h1>
+        <p><Link className="btn btn-outline-primary mb-4" to="/calendrier">Voir les séances dans le calendrier</Link></p>
 
         {isLoading && <p className="text-muted">Chargement des réservations...</p>}
 
@@ -74,6 +94,14 @@ function ReservationsPage() {
                     <strong>Prix par place :</strong> {Number(reservation.sc_price).toFixed(2)} €
                   </p>
                 </div>
+                <button
+                  className="btn btn-outline-danger btn-sm mt-3"
+                  type="button"
+                  disabled={cancellingReservationId === reservation.re_id}
+                  onClick={() => handleCancel(reservation)}
+                >
+                  {cancellingReservationId === reservation.re_id ? 'Annulation...' : 'Annuler la réservation'}
+                </button>
               </article>
             ))}
           </div>
